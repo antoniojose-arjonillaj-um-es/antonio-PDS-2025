@@ -1,12 +1,14 @@
 package modelo;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class Usuario {
 	// Constantes
-	private static final int MAX_TICKETS = 10;
-	private static final int INICIO = 0;
+	private static final int MAX_TICKETS = 10;		// Máximo tickets por usuario
+	private static final int INICIO = 0;			// Defecto
+	private static final double INTERVALO = 2.4;	// Intervalo mínimo para adquirir ticket (horas)
 	
 	// Atributos
 	private String nombreUs;
@@ -121,4 +123,32 @@ public class Usuario {
 	}
 	
 	// Métodos de clase
+	public int calcularTickets() {
+		Duration duracion = Duration.between(ultimaSes, inicioSes);
+	    int posibles = (int) (duracion.toHours()/INTERVALO);
+	    if(posibles>=MAX_TICKETS)
+		    tickets=MAX_TICKETS;
+	    tickets=posibles;
+		return tickets;
+	}
+	
+	public int actualizarTiempoUso() {
+		Duration duracion = Duration.between(inicioSes, LocalDateTime.now());
+		tiempoUso += duracion.toHoursPart();
+		return tiempoUso;
+	}
+	
+	public int calcularRacha() {
+		Duration duracion = Duration.between(ultimaSes, inicioSes);
+		if (duracion.toHoursPart()<=24) {
+			rachaActual++;
+		}
+		else {
+			rachaActual=0;
+		}
+		if(rachaActual>mejorRacha) {
+			mejorRacha = rachaActual;
+		}
+		return rachaActual;
+	}
 }
