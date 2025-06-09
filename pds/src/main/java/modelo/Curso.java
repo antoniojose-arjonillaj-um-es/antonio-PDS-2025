@@ -7,7 +7,7 @@ import java.util.List;
 public class Curso {
 	// Atributos
 	private List<Pregunta> preguntas;	// Lista de preguntas
-	private List<Boolean> correccion;	// Estado de respuestas dadas
+	private List<Boolean> correcciones;	// Estado de respuestas dadas
 	private int ultima;					// Ultima pregunta consultada
 	private Estado estado;				// Estado del curso
 	
@@ -16,7 +16,7 @@ public class Curso {
 		this.preguntas=preguntas;
 		this.estado=Estado.SIN_EMPEZAR;
 		this.ultima=0;
-		this.correccion=new ArrayList<>(Collections.nCopies(preguntas.size(), null));
+		this.correcciones=new ArrayList<>(Collections.nCopies(preguntas.size(), null));
 	}
 
 	// Getters
@@ -29,7 +29,7 @@ public class Curso {
 	}
 	
 	public List<Boolean> getCorreccion(){
-		return correccion;
+		return correcciones;
 	}
 	
 	public int getUltima(){
@@ -42,12 +42,22 @@ public class Curso {
 
 	public int getCorrectas() {
 		int correctas = 0;
-		for (Boolean resultado : correccion) {
-			if(resultado) {
+		for (Boolean resultado : correcciones) {
+			if(resultado && resultado!=null) {
 				correctas++;
 			}
 		}
 		return correctas;
+	}
+	
+	public int getIncorrectas() {
+		int incorrectas = 0;
+		for (Boolean resultado : correcciones) {
+			if(!resultado && resultado!=null) {
+				incorrectas++;
+			}
+		}
+		return incorrectas;
 	}
 	
 	// Setters
@@ -55,9 +65,32 @@ public class Curso {
 		this.preguntas = preguntas;
 	}
 	
+	public void setCorrecciones(List<Boolean> correcciones) {
+		this.correcciones = correcciones;
+	}
+	
+	public void setUltima(int ultima) {
+		this.ultima = ultima;
+	}
+	
 	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
 	
+	// Método de clase
+	public void siguientePreg(boolean resultado){
+		correcciones.set(ultima, resultado);
+		if(ultima<getNumPreguntas()) {
+			ultima++;
+			estado=Estado.EN_PROCESO;
+		}
+		ultima=-1;
+		estado=Estado.FINALIZADO;
+	}
 	
+	public void reiniciarCurso() {
+		this.estado=Estado.SIN_EMPEZAR;
+		this.ultima=0;
+		this.correcciones=new ArrayList<>(Collections.nCopies(preguntas.size(), null));
+	}
 }
