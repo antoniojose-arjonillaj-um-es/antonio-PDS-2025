@@ -1,16 +1,29 @@
 package modelo;
 
 public class Traduccion extends Pregunta{
-
-	public Traduccion(String resp, Tipo tipo) {
-		super(resp, tipo);
-		// TODO Auto-generated constructor stub
+	// Atributos
+	private String respuesta;
+	
+	// Constructor
+	public Traduccion(String preg, String resp) {
+		super(preg);
+		this.respuesta=resp;
+	}
+	
+	// Getters
+	public String getRespuesta() {
+		return respuesta;
+	}
+	
+	// Setters
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
 	}
 
+	// Métodos de clase
 	@Override
 	public boolean comprobarRespuesta(String dato) {
-		// TODO Auto-generated method stub
-		return false;
+		return respuesta.equals(dato);
 	}
 
 }

@@ -2,17 +2,39 @@ package modelo;
 
 public class Relleno extends Pregunta{
 	// Atributo
-	public String enunciado;
+	public String segundaPreg;
+	public String respuesta;
 	
 	// Constructor
-	public Relleno(String resp, String enun) {
-		super(resp);
-		this.enunciado=enun;
+	public Relleno(String preg, String seg, String resp) {
+		super(preg);
+		this.segundaPreg=seg;
+		this.respuesta=resp;
 	}
 
+	
+	// Getters
+	public String getSegundaPreg() {
+		return segundaPreg;
+	}
+
+	public String getRespuesta() {
+		return respuesta;
+	}
+
+	// Setters
+	public void setSegundaPreg(String segundaPreg) {
+		this.segundaPreg = segundaPreg;
+	}
+
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
+	}
+
+	// Métodos de clase
 	@Override
 	public boolean comprobarRespuesta(String dato) {
-		return false;
+		return respuesta.contains(dato);
 	}
 
 }
