@@ -1,19 +1,30 @@
 package vistas;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -22,9 +33,12 @@ import umu.pds.Controlador;
 
 public class VentanaRegistro {
 
+	// Constante
+	public static String DEFECTO = "/recursos/user_default.png";
+	
 	// Atributos
 	private Controlador controlador;
-	private static String imgActual = ""; // Inicialmente, imagen por defecto
+	private static String imgActual = "";
 
 	public VentanaRegistro(Controlador control) {
 
@@ -65,14 +79,14 @@ public class VentanaRegistro {
 		JLabel lblRepetir = new JLabel("Repetir contraseña:");
 		JPasswordField txtRepetir = new JPasswordField();
 
-		JLabel lblUrlImagen = new JLabel("Url Imagen:");
-		JTextField txtUrlImagen = new JTextField();
+		JLabel lblImagen = new JLabel("Url Imagen:");
+		JTextField txtImagen = new JTextField();
 
-		JLabel lblImagen = new JLabel("Imagen", SwingConstants.CENTER);
-		lblImagen.setPreferredSize(new Dimension(120, 120));
-		lblImagen.setMinimumSize(new Dimension(120, 120));
-		lblImagen.setMaximumSize(new Dimension(120, 120));
-		lblImagen.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		JLabel imagen = new JLabel("", SwingConstants.CENTER);
+		ImageIcon originalIcon = new ImageIcon(getClass().getResource(DEFECTO));
+		Image scaledImage = originalIcon.getImage().getScaledInstance((int) (width * 0.25), (int) (height * 0.3),
+				Image.SCALE_SMOOTH);
+		imagen.setIcon(new ImageIcon(scaledImage));
 
 		JButton btnActualizar = new JButton("Actualizar");
 		JButton btnCancelar = new JButton("Cancelar");
@@ -147,14 +161,14 @@ public class VentanaRegistro {
 		gbc.gridx = 0;
 		gbc.gridy = 4;
 		gbc.anchor = GridBagConstraints.WEST;
-		contentPanel.add(lblUrlImagen, gbc);
+		contentPanel.add(lblImagen, gbc);
 
 		gbc = new GridBagConstraints();
 		gbc.insets = new Insets(8, 8, 8, 8);
 		gbc.gridx = 1;
 		gbc.gridy = 4;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		contentPanel.add(txtUrlImagen, gbc);
+		contentPanel.add(txtImagen, gbc);
 
 		gbc = new GridBagConstraints();
 		gbc.gridwidth = 2;
@@ -169,9 +183,9 @@ public class VentanaRegistro {
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.gridx = 1;
 		gbc.gridy = 6;
-		gbc.fill = GridBagConstraints.NONE;
+		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(8, 20, 8, 8);
-		contentPanel.add(lblImagen, gbc);
+		contentPanel.add(imagen, gbc);
 
 		// Panel inferior para botones Aceptar y Cancelar
 		JPanel panelBotones = new JPanel(new BorderLayout());
@@ -181,8 +195,83 @@ public class VentanaRegistro {
 		// Agregar paneles al principal
 		panelPrincipal.add(contentPanel, BorderLayout.CENTER);
 		panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
+		
+		// Añadimos scroll panel en caso de que falte espacio
+		JScrollPane scrollPanel = new JScrollPane(contentPanel);
+		scrollPanel.setBorder(null);
+		panelPrincipal.add(scrollPanel, BorderLayout.CENTER);
 		frame.setContentPane(panelPrincipal);
-
+		
+		// Funcionalidades de los botones
+		btnActualizar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				imgActual = txtImagen.getText().trim();
+				if (!imgActual.isEmpty()) {
+					try {
+						URL urlImagen = URI.create(imgActual).toURL();
+						ImageIcon originalIcon = new ImageIcon(urlImagen);
+						Image scaledIcon = originalIcon.getImage().getScaledInstance((int) (frame.getWidth() * 0.3),
+								(int) (frame.getHeight() * 0.3), Image.SCALE_SMOOTH);
+						imagen.setIcon(new ImageIcon(scaledIcon));
+					} catch (MalformedURLException ex) {
+						JOptionPane.showMessageDialog(frame, "URL no válida", "Error", JOptionPane.ERROR_MESSAGE);
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(frame, "No se pudo cargar imagen", "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+					txtImagen.setText("");
+				} else {
+					imgActual = "";
+					JOptionPane.showMessageDialog(frame, "Introduzca una URL", "Error", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+		
+		btnCancelar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new VentanaLogin(controlador);
+				frame.dispose();
+			}
+		});
+		
+		btnAceptar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Comprobamos que los datos obligatorios están completos
+				List<JTextField> campos = Arrays.asList(txtNombre, txtTelefono, txtContrasena, txtRepetir);
+				boolean completos = campos.stream().noneMatch(campo -> campo.getText().trim().isEmpty());
+				if (completos) {
+					// Pasamos los datos a String y los pasamos a controlador
+					List<String> datos = campos.stream().map(JTextField::getText).collect(Collectors.toList());
+					datos.add(imgActual);
+					switch (controlador.registrarUsuario(datos)) {
+					case Controlador.ACIERTO:
+						JOptionPane.showMessageDialog(frame, "Registro completado correctamente");
+						new VentanaLogin(controlador);
+						frame.dispose();
+						break;
+					case Controlador.ERROR_TLF:
+						JOptionPane.showMessageDialog(frame, "Número de telefono ya registrado", "Error",JOptionPane.WARNING_MESSAGE);
+						txtTelefono.setText("");
+						break;
+					case Controlador.ERROR_NOREPE:
+						JOptionPane.showMessageDialog(frame, "Contraseñas no son iguales", "Error",JOptionPane.ERROR_MESSAGE);
+						txtContrasena.setText("");
+						txtRepetir.setText("");
+						break;
+					default:
+						// Error desconocido
+						JOptionPane.showMessageDialog(frame, "Error desconocido", "Error", JOptionPane.ERROR_MESSAGE);
+						break;
+					}
+				} else {
+					JOptionPane.showMessageDialog(frame, "Debes rellenar todos los campos");
+				}
+			}
+		});
+		
 		// Mostramos el panel
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
