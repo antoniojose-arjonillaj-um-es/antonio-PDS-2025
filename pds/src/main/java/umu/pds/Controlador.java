@@ -40,7 +40,7 @@ public class Controlador
 
 	public Usuario aceptarLogin(String nombreUs, String contraseña) {
 		// TODO: Crear método en repositorio
-		Usuario user = repositorioUs.getUsuario(nombreUs);
+		Usuario user=null;// = repositorioUs.getUsuario(nombreUs);
 		if(user.comprobarContrasena(contraseña))
 			return user;
 		return null;
