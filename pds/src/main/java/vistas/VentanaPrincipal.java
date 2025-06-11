@@ -3,7 +3,6 @@ package vistas;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -185,7 +184,7 @@ public class VentanaPrincipal {
 		panel.add(Box.createVerticalStrut(3));
 
 		panel.add(new JLabel("Modo:"));
-		JComboBox<String> comboModo = new JComboBox<>(new String[] { "Aleatorio", "Espaciado", "Defecto" });
+		JComboBox<String> comboModo = new JComboBox<>(new String[] { Controlador.DEFECTO, Controlador.ALEATORIO, Controlador.ESPACIADO });
 		panel.add(comboModo);
 
 		int resultado = JOptionPane.showConfirmDialog(null, panel, "Seleccionar Curso", JOptionPane.YES_NO_OPTION,

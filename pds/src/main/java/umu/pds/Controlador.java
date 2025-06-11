@@ -11,7 +11,9 @@ import vistas.VentanaLogin;
  */
 public class Controlador 
 {
-	// Variables de clase
+	
+	
+	// Variables globales
     public static final int ACIERTO = 0;
 	public static final int ERROR_TLF = 1;
 	public static final int ERROR_NOREPE = 2;
@@ -22,6 +24,11 @@ public class Controlador
 	public static final int REPE = 3;
 	public static final int IMAG = 4;
 
+	public static final String DEFECTO = "Defecto";
+	public static final String ALEATORIO = "Aleatorio";
+	public static final String ESPACIADO = "Espaciado";
+	
+	
 	// Atributos
 	private static Controlador instancia = null;
 	private RepositorioUsuarios repositorioUs;
