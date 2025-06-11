@@ -2,6 +2,7 @@ package modelo;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Usuario {
@@ -27,13 +28,13 @@ public class Usuario {
 	
 	
 	// Constructor
-	public Usuario (String nombreUs, String contrasena, String imagen, int telefono, List<Curso> cursos) {
+	public Usuario (String nombreUs, String contrasena, String imagen, int telefono) {
 		this.nombreUs=nombreUs;
 		this.contrasena=contrasena;
 		this.imagen=imagen;
 		this.telefono=telefono;
-		this.cursos=cursos;
 		
+		this.cursos= new ArrayList<Curso>();
 		this.tickets = MAX_TICKETS;
 		this.tiempoUso= INICIO;
 		this.mejorRacha=INICIO;
