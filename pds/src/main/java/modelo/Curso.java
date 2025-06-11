@@ -6,13 +6,15 @@ import java.util.List;
 
 public class Curso {
 	// Atributos
+	private String nombre; 				// Nombre curso
 	private List<Pregunta> preguntas;	// Lista de preguntas
 	private List<Boolean> correcciones;	// Estado de respuestas dadas
 	private int ultima;					// Ultima pregunta consultada
 	private Estado estado;				// Estado del curso
 	
 	// Constructor
-	public Curso(List<Pregunta> preguntas) {
+	public Curso(String nombre, List<Pregunta> preguntas) {
+		this.nombre=nombre;
 		this.preguntas=preguntas;
 		this.estado=Estado.SIN_EMPEZAR;
 		this.ultima=0;
@@ -20,6 +22,10 @@ public class Curso {
 	}
 
 	// Getters
+	public String getNombre() {
+		return nombre;
+	}
+	
 	public List<Pregunta> getPreguntas() {
 		return preguntas;
 	}
@@ -61,6 +67,10 @@ public class Curso {
 	}
 	
 	// Setters
+	public void setNombre(String nombre) {
+		this.nombre=nombre;
+	}
+	
 	public void setPreguntas(List<Pregunta> preguntas) {
 		this.preguntas = preguntas;
 	}
