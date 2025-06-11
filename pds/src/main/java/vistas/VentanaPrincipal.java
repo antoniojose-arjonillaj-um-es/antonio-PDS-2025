@@ -1,6 +1,7 @@
 package vistas;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -25,7 +26,7 @@ import umu.pds.Controlador;
 public class VentanaPrincipal {
 
 	// Constante
-	private static final double PROPORCION_IMG = 0.09;
+	private static final double PROPORCION_IMG = 0.27;
 	
 	// Atributos
 	private Usuario usuario;
@@ -41,12 +42,13 @@ public class VentanaPrincipal {
 		frame = new JFrame("Copialingo - Principal");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // TODO: Editar en futuro
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setSize((int) (screenSize.width * 0.7), (int) (screenSize.height * 0.75));
+		frame.setSize((int) (screenSize.width * 0.5), (int) (screenSize.height * 0.5));
+		frame.setMinimumSize(new Dimension(550,300));
 
 		// Establecemos el panel contenedor
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout(0, 0));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(new EmptyBorder(2, 2, 2, 2));
 		frame.setContentPane(contentPane);
 
 		// Componentes de ventana
@@ -58,7 +60,7 @@ public class VentanaPrincipal {
 
 		JLabel imagenTckt = new JLabel("");
 		ImageIcon originalIcon = new ImageIcon(getClass().getResource("/recursos/entradas.png"));
-		Image scaledImage = originalIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		Image scaledImage = originalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		imagenTckt.setIcon(new ImageIcon(scaledImage));
 		
 		JLabel numeroTckt = new JLabel(Integer.toString(usuario.getTickets()));
@@ -82,25 +84,23 @@ public class VentanaPrincipal {
 		panelTckt.add(Box.createHorizontalStrut(5));
 		panelTckt.add(imagenTckt);
 
-		// Panel para info rachas
-		JPanel panelRacha = new JPanel();
-		panelRacha.setLayout(new BoxLayout(panelRacha, BoxLayout.X_AXIS));
-		panelRacha.add(rachaAct);
-		panelRacha.add(Box.createHorizontalStrut(5));
-		panelRacha.add(rachaMax);
-
 		// Panel para organizar info + rachas
 		JPanel panelInfo = new JPanel();
 		panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
 		panelInfo.add(panelTckt);
+		panelTckt.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelInfo.add(Box.createVerticalStrut(5));
-		panelInfo.add(panelRacha);
-
+		panelInfo.add(rachaAct);
+		rachaAct.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelInfo.add(Box.createVerticalStrut(5));
+		panelInfo.add(rachaMax);
+		rachaMax.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
 		// Creamos panel superior con info usuario
 		JPanel panelSup = new JPanel();
 		panelSup.setLayout(new BoxLayout(panelSup, BoxLayout.X_AXIS));
 		panelSup.add(imagenUs);
-		panelSup.add(Box.createHorizontalStrut(5));
+		panelSup.add(Box.createHorizontalStrut(10));
 		panelSup.add(panelUs);
 		panelSup.add(Box.createHorizontalGlue());
 		panelSup.add(panelInfo);
