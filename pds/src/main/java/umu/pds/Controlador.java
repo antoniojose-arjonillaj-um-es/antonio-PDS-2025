@@ -11,18 +11,26 @@ import vistas.VentanaLogin;
  */
 public class Controlador 
 {
+	// Variables de clase
     public static final int ACIERTO = 0;
 	public static final int ERROR_TLF = 1;
 	public static final int ERROR_NOREPE = 2;
 
+	// Atributos
+	private static Controlador instancia = null;
+	private RepositorioUsuarios repositorioUs;
+	
+	// Constructor
 	public Controlador() {
-		new VentanaLogin(this);
+		repositorioUs = RepositorioUsuarios.getInstancia();
 	}
 	
-	public static void main( String[] args )
-    {
-        new Controlador();
-    }
+	// Métodos de clase
+	public static Controlador getInstancia() {
+		if(instancia==null) 
+			instancia = new Controlador();
+		return instancia;
+	}
 
 	public Usuario aceptarLogin(String nombreUs, String contraseña) {
 		// TODO Auto-generated method stub
