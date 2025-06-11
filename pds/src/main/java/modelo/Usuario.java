@@ -14,6 +14,7 @@ public class Usuario {
 	private String nombreUs;
 	private String contrasena;
 	private String imagen;
+	private int telefono;
 	private List<Curso> cursos;
 	
 	private int tickets;	// Número de cursos que se pueden hacer al día
@@ -26,10 +27,11 @@ public class Usuario {
 	
 	
 	// Constructor
-	public Usuario (String nombreUs, String contrasena, String imagen, List<Curso> cursos) {
+	public Usuario (String nombreUs, String contrasena, String imagen, int telefono, List<Curso> cursos) {
 		this.nombreUs=nombreUs;
 		this.contrasena=contrasena;
 		this.imagen=imagen;
+		this.telefono=telefono;
 		this.cursos=cursos;
 		
 		this.tickets = MAX_TICKETS;
@@ -53,6 +55,10 @@ public class Usuario {
 		return imagen;
 	}
 
+	public int getTelefono() {
+		return telefono;
+	}
+	
 	public List<Curso> getCursos() {
 		return cursos;
 	}
@@ -94,6 +100,10 @@ public class Usuario {
 		this.imagen = imagen;
 	}
 	
+	public void setTelefono(int telefono) {
+		this.telefono = telefono;
+	}
+	
 	public void setCursos(List<Curso> cursos) {
 		this.cursos = cursos;
 	}
@@ -123,6 +133,10 @@ public class Usuario {
 	}
 	
 	// Métodos de clase
+	public boolean comprobarContrasena(String contrasena) {
+		return this.contrasena.equals(contrasena);
+	}
+	
 	public int calcularTickets() {
 		Duration duracion = Duration.between(ultimaSes, inicioSes);
 	    int posibles = (int) (duracion.toHours()/INTERVALO);
