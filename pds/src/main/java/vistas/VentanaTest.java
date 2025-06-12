@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.Box;
@@ -17,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.Timer;
 
 import modelo.Curso;
 import modelo.Pregunta;
@@ -31,6 +33,7 @@ public class VentanaTest {
 	private Controlador controlador;
 	private Usuario usuario;
 	private Curso curso;
+	private String modalidad;
 	private int indiceActual;
 
 	private JFrame frame;
@@ -41,13 +44,16 @@ public class VentanaTest {
 	private JTextField campoTextoActual; // Para preguntas de traducción o rellenar
 	private Pregunta preguntaActual; // Para saber qué tipo de pregunta es
 
+	private List<Pregunta> preguntas; // Lista de preguntas real, según modalidad
+	private Timer temporizador;
+	
 	// Constructor
 	public VentanaTest(Controlador controlador, Usuario usuario, Curso curso, String modalidad) {
 
 		this.controlador = controlador;
 		this.usuario = usuario;
 		this.curso = curso;
-
+		this.modalidad = modalidad;
 		indiceActual = 0;
 
 		// Inicializamos frame principal
@@ -71,38 +77,38 @@ public class VentanaTest {
 
 		// Creamos el componente botón y su panel para mantener su espacio
 		btnSiguiente = new JButton("Siguiente");
-		JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		panelBoton.add(btnSiguiente);
-		contentPane.add(panelBoton, BorderLayout.SOUTH);
-
-		mostrarPregunta();
-
 		btnSiguiente.addActionListener(e -> {
-			String respuestaUsuario = "";
-			if (preguntaActual instanceof Test && checkBoxesActuales != null) {
-				List<String> seleccionadas = new ArrayList<>();
-				for (JCheckBox check : checkBoxesActuales) {
-					if (check.isSelected()) {
-						seleccionadas.add(check.getText());
-					}
-				}
-				respuestaUsuario = String.join(", ", seleccionadas);
-			} else if ((preguntaActual instanceof Traduccion || preguntaActual instanceof Relleno)
-					&& campoTextoActual != null) {
-				respuestaUsuario = campoTextoActual.getText().trim();
-			}
-
-			System.out.println("Respuesta del usuario: " + respuestaUsuario);
-
+			recogerRespuestaActual();
 			if (indiceActual < curso.getPreguntas().size() - 1) {
 				indiceActual++;
 				mostrarPregunta();
 			} else {
-				JOptionPane.showMessageDialog(null, "Fin del test.");
+				JOptionPane.showMessageDialog(null, "Fin del test."); // TODO: Añadir correcciones
 				btnSiguiente.setEnabled(false);
 				frame.dispose();
 			}
 		});
+		JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		panelBoton.add(btnSiguiente);
+		contentPane.add(panelBoton, BorderLayout.SOUTH);
+		
+		// Preparamos curso según modalidad escogida
+		switch (modalidad) {
+	    case Controlador.ALEATORIO:
+	        preguntas = new ArrayList<>(curso.getPreguntas());
+	        Collections.shuffle(preguntas); // Desordenamos preguntas
+	        break;
+
+	    case Controlador.CONTRARRELOJ:
+	        preguntas = curso.getPreguntas();
+	        iniciarTemporizador();  // Lanzamos el temporizador
+	        break;
+
+	    default:  // defecto
+	        preguntas = curso.getPreguntas();
+		}
+
+		mostrarPregunta();
 
 		// Finalmente mostramos la ventana
 		frame.setLocationRelativeTo(null);
@@ -115,7 +121,7 @@ public class VentanaTest {
 		Box box = Box.createVerticalBox();
 		box.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		preguntaActual = curso.getPreguntas().get(indiceActual);
+		preguntaActual = preguntas.get(indiceActual);
 		if (preguntaActual instanceof Test) {
 			mostrarPreguntaTest((Test) preguntaActual, box);
 
@@ -137,6 +143,9 @@ public class VentanaTest {
 
 		panelCentro.revalidate();
 		panelCentro.repaint();
+		
+		if(modalidad.equals(Controlador.CONTRARRELOJ))
+			reiniciarTemporizador();
 	}
 
 	private void mostrarPreguntaTest(Test pregunta, Box box) {
@@ -186,5 +195,48 @@ public class VentanaTest {
 		box.add(enunciado);
 		box.add(Box.createVerticalStrut(20));
 		box.add(campoTextoActual);
+	}
+	
+	private void iniciarTemporizador() {
+	    temporizador = new Timer(10_000, e -> {avanzarAutomaticamente();});
+	    temporizador.setRepeats(false);  // Solo una vez por pregunta
+	    temporizador.start();
+	}
+	
+	private void reiniciarTemporizador() {
+	    if ("contrarreloj".equalsIgnoreCase(modalidad)) {
+	        temporizador.restart();
+	    }
+	}
+	
+	private void avanzarAutomaticamente() {
+	    recogerRespuestaActual();  // Obtener la respuesta antes de pasar
+	    if (indiceActual < preguntas.size() - 1) {
+	        indiceActual++;
+	        mostrarPregunta();
+	    } else {
+	        JOptionPane.showMessageDialog(null, "Fin del test (Fin del tiempo).");
+	        btnSiguiente.setEnabled(false);
+	        frame.dispose();
+	    }
+	}
+
+	private void recogerRespuestaActual() {
+	    String respuestaUsuario = "";
+
+	    if (preguntaActual instanceof Test && checkBoxesActuales != null) {
+	        List<String> seleccionadas = new ArrayList<>();
+	        for (JCheckBox check : checkBoxesActuales) {
+	            if (check.isSelected()) {
+	                seleccionadas.add(check.getText());
+	            }
+	        }
+	        respuestaUsuario = String.join(", ", seleccionadas);
+	    } else if ((preguntaActual instanceof Traduccion || preguntaActual instanceof Relleno)
+	               && campoTextoActual != null) {
+	        respuestaUsuario = campoTextoActual.getText().trim();
+	    }
+
+	    System.out.println("Respuesta del usuario: " + respuestaUsuario);
 	}
 }

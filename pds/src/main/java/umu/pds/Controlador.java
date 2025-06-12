@@ -26,7 +26,7 @@ public class Controlador
 
 	public static final String DEFECTO = "Defecto";
 	public static final String ALEATORIO = "Aleatorio";
-	public static final String ESPACIADO = "Espaciado";
+	public static final String CONTRARRELOJ = "Contrarreloj";
 	
 	
 	// Atributos

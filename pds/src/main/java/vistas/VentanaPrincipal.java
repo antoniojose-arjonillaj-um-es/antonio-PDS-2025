@@ -185,7 +185,7 @@ public class VentanaPrincipal {
 		panel.add(Box.createVerticalStrut(3));
 
 		panel.add(new JLabel("Modo:"));
-		JComboBox<String> comboModo = new JComboBox<>(new String[] { Controlador.DEFECTO, Controlador.ALEATORIO, Controlador.ESPACIADO });
+		JComboBox<String> comboModo = new JComboBox<>(new String[] { Controlador.DEFECTO, Controlador.ALEATORIO, Controlador.CONTRARRELOJ });
 		panel.add(comboModo);
 
 		int resultado = JOptionPane.showConfirmDialog(null, panel, "Seleccionar Curso", JOptionPane.YES_NO_OPTION,
