@@ -24,11 +24,9 @@ public class Controlador
 
 	// Atributos
 	private static Controlador instancia = null;
-	private RepositorioUsuarios repositorioUs;
 	
 	// Constructor
 	public Controlador() {
-		repositorioUs = RepositorioUsuarios.getInstancia();
 	}
 	
 	// Métodos de clase
