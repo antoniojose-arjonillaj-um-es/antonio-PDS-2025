@@ -17,8 +17,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.border.EmptyBorder;
 
 import modelo.Curso;
 import modelo.Pregunta;
@@ -29,24 +30,29 @@ import modelo.Usuario;
 import umu.pds.Controlador;
 
 public class VentanaTest {
-	// Atributos
+	// Atributos generales
 	private Controlador controlador;
 	private Usuario usuario;
 	private Curso curso;
 	private String modalidad;
 	private int indiceActual;
 
+	// Atributos visibles
 	private JFrame frame;
 	private JPanel panelCentro;
 	private JButton btnSiguiente;
 
+	// Atributos para obtener respuestas
 	private List<JCheckBox> checkBoxesActuales; // Para preguntas tipo test (multi)
 	private JTextField campoTextoActual; // Para preguntas de traducción o rellenar
 	private Pregunta preguntaActual; // Para saber qué tipo de pregunta es
 
+	// Atributos para modalidades
 	private List<Pregunta> preguntas; // Lista de preguntas real, según modalidad
 	private Timer temporizador;
-	
+	private JLabel etiquetaTemporizador;
+	private int segRestantes;
+
 	// Constructor
 	public VentanaTest(Controlador controlador, Usuario usuario, Curso curso, String modalidad) {
 
@@ -91,21 +97,27 @@ public class VentanaTest {
 		JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		panelBoton.add(btnSiguiente);
 		contentPane.add(panelBoton, BorderLayout.SOUTH);
-		
+
+		// Etiqueta de tiempo
+		etiquetaTemporizador = new JLabel("Tiempo restante: 10 s");
+		etiquetaTemporizador.setHorizontalAlignment(SwingConstants.CENTER);
+		frame.getContentPane().add(etiquetaTemporizador, BorderLayout.NORTH);
+		etiquetaTemporizador.setVisible(false); // Por defecto oculto, sólo se muestra en contrarreloj
+
 		// Preparamos curso según modalidad escogida
 		switch (modalidad) {
-	    case Controlador.ALEATORIO:
-	        preguntas = new ArrayList<>(curso.getPreguntas());
-	        Collections.shuffle(preguntas); // Desordenamos preguntas
-	        break;
+		case Controlador.ALEATORIO:
+			preguntas = new ArrayList<>(curso.getPreguntas());
+			Collections.shuffle(preguntas); // Desordenamos preguntas
+			break;
 
-	    case Controlador.CONTRARRELOJ:
-	        preguntas = curso.getPreguntas();
-	        iniciarTemporizador();  // Lanzamos el temporizador
-	        break;
+		case Controlador.CONTRARRELOJ:
+			preguntas = curso.getPreguntas();
+			iniciarTemporizador(); // Lanzamos el temporizador
+			break;
 
-	    default:  // defecto
-	        preguntas = curso.getPreguntas();
+		default: // defecto
+			preguntas = curso.getPreguntas();
 		}
 
 		mostrarPregunta();
@@ -143,8 +155,8 @@ public class VentanaTest {
 
 		panelCentro.revalidate();
 		panelCentro.repaint();
-		
-		if(modalidad.equals(Controlador.CONTRARRELOJ))
+
+		if (modalidad.equals(Controlador.CONTRARRELOJ))
 			reiniciarTemporizador();
 	}
 
@@ -196,47 +208,69 @@ public class VentanaTest {
 		box.add(Box.createVerticalStrut(20));
 		box.add(campoTextoActual);
 	}
-	
+
 	private void iniciarTemporizador() {
-	    temporizador = new Timer(10_000, e -> {avanzarAutomaticamente();});
-	    temporizador.setRepeats(false);  // Solo una vez por pregunta
-	    temporizador.start();
+		segRestantes = 10;
+		etiquetaTemporizador.setVisible(true);
+		actualizarEtiquetaTemporizador();
+
+		if (temporizador != null && temporizador.isRunning()) {
+			temporizador.stop();
+		}
+
+		temporizador = new Timer(1000, e -> {
+			segRestantes--;
+			actualizarEtiquetaTemporizador();
+
+			if (segRestantes <= 0) {
+				temporizador.stop();
+				avanzarAutomaticamente();
+			}
+		});
+		temporizador.start();
 	}
-	
+
 	private void reiniciarTemporizador() {
-	    if ("contrarreloj".equalsIgnoreCase(modalidad)) {
-	        temporizador.restart();
+		if (modalidad.equals(Controlador.CONTRARRELOJ)) {
+	        if (temporizador != null && temporizador.isRunning()) {
+	            temporizador.stop();
+	        }
+	        iniciarTemporizador();
 	    }
 	}
-	
+
+	private void actualizarEtiquetaTemporizador() {
+		etiquetaTemporizador.setText("Tiempo restante: " + segRestantes + " s");
+	}
+
 	private void avanzarAutomaticamente() {
-	    recogerRespuestaActual();  // Obtener la respuesta antes de pasar
-	    if (indiceActual < preguntas.size() - 1) {
-	        indiceActual++;
-	        mostrarPregunta();
-	    } else {
-	        JOptionPane.showMessageDialog(null, "Fin del test (Fin del tiempo).");
-	        btnSiguiente.setEnabled(false);
-	        frame.dispose();
-	    }
+		recogerRespuestaActual(); // Obtener la respuesta antes de pasar
+		if (indiceActual < preguntas.size() - 1) {
+			indiceActual++;
+			mostrarPregunta();
+		} else {
+			JOptionPane.showMessageDialog(null, "Fin del test (Fin del tiempo).");
+			btnSiguiente.setEnabled(false);
+			frame.dispose();
+		}
 	}
 
 	private void recogerRespuestaActual() {
-	    String respuestaUsuario = "";
+		String respuestaUsuario = "";
 
-	    if (preguntaActual instanceof Test && checkBoxesActuales != null) {
-	        List<String> seleccionadas = new ArrayList<>();
-	        for (JCheckBox check : checkBoxesActuales) {
-	            if (check.isSelected()) {
-	                seleccionadas.add(check.getText());
-	            }
-	        }
-	        respuestaUsuario = String.join(", ", seleccionadas);
-	    } else if ((preguntaActual instanceof Traduccion || preguntaActual instanceof Relleno)
-	               && campoTextoActual != null) {
-	        respuestaUsuario = campoTextoActual.getText().trim();
-	    }
+		if (preguntaActual instanceof Test && checkBoxesActuales != null) {
+			List<String> seleccionadas = new ArrayList<>();
+			for (JCheckBox check : checkBoxesActuales) {
+				if (check.isSelected()) {
+					seleccionadas.add(check.getText());
+				}
+			}
+			respuestaUsuario = String.join(", ", seleccionadas);
+		} else if ((preguntaActual instanceof Traduccion || preguntaActual instanceof Relleno)
+				&& campoTextoActual != null) {
+			respuestaUsuario = campoTextoActual.getText().trim();
+		}
 
-	    System.out.println("Respuesta del usuario: " + respuestaUsuario);
+		System.out.println("Respuesta del usuario: " + respuestaUsuario);
 	}
 }
