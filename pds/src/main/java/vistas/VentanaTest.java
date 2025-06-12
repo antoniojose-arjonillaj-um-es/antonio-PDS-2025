@@ -3,16 +3,17 @@ package vistas;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -35,6 +36,10 @@ public class VentanaTest {
 	private JFrame frame;
 	private JPanel panelCentro;
 	private JButton btnSiguiente;
+
+	private List<JCheckBox> checkBoxesActuales; // Para preguntas tipo test (multi)
+	private JTextField campoTextoActual; // Para preguntas de traducción o rellenar
+	private Pregunta preguntaActual; // Para saber qué tipo de pregunta es
 
 	// Constructor
 	public VentanaTest(Controlador controlador, Usuario usuario, Curso curso, String modalidad) {
@@ -73,6 +78,22 @@ public class VentanaTest {
 		mostrarPregunta();
 
 		btnSiguiente.addActionListener(e -> {
+			String respuestaUsuario = "";
+			if (preguntaActual instanceof Test && checkBoxesActuales != null) {
+				List<String> seleccionadas = new ArrayList<>();
+				for (JCheckBox check : checkBoxesActuales) {
+					if (check.isSelected()) {
+						seleccionadas.add(check.getText());
+					}
+				}
+				respuestaUsuario = String.join(", ", seleccionadas);
+			} else if ((preguntaActual instanceof Traduccion || preguntaActual instanceof Relleno)
+					&& campoTextoActual != null) {
+				respuestaUsuario = campoTextoActual.getText().trim();
+			}
+
+			System.out.println("Respuesta del usuario: " + respuestaUsuario);
+
 			if (indiceActual < curso.getPreguntas().size() - 1) {
 				indiceActual++;
 				mostrarPregunta();
@@ -91,80 +112,79 @@ public class VentanaTest {
 	private void mostrarPregunta() {
 		panelCentro.removeAll();
 
-		Box boxVertical = Box.createVerticalBox();
-	    boxVertical.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
-		Pregunta pregunta = curso.getPreguntas().get(indiceActual);
-		if (pregunta instanceof Test) {
-			mostrarPreguntaTest((Test) pregunta, boxVertical);
-			
-		} else if (pregunta instanceof Relleno) {
-			mostrarPreguntaRelleno((Relleno) pregunta, boxVertical);
-			
-		} else if (pregunta instanceof Traduccion) {
-			mostrarPreguntaTraduccion((Traduccion) pregunta, boxVertical);
-			
+		Box box = Box.createVerticalBox();
+		box.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		preguntaActual = curso.getPreguntas().get(indiceActual);
+		if (preguntaActual instanceof Test) {
+			mostrarPreguntaTest((Test) preguntaActual, box);
+
+		} else if (preguntaActual instanceof Relleno) {
+			mostrarPreguntaRelleno((Relleno) preguntaActual, box);
+
+		} else if (preguntaActual instanceof Traduccion) {
+			mostrarPreguntaTraduccion((Traduccion) preguntaActual, box);
+
 		} else {
 			JOptionPane.showMessageDialog(null, "Tipo de pregunta no soportada", "Error", JOptionPane.WARNING_MESSAGE);
-		
+
 		}
 
 		// Pegamos la caja vertical al centro verticalmente usando glue
-	    panelCentro.add(Box.createVerticalGlue());
-	    panelCentro.add(boxVertical);
-	    panelCentro.add(Box.createVerticalGlue());
-	    
+		panelCentro.add(Box.createVerticalGlue());
+		panelCentro.add(box);
+		panelCentro.add(Box.createVerticalGlue());
+
 		panelCentro.revalidate();
 		panelCentro.repaint();
 	}
 
 	private void mostrarPreguntaTest(Test pregunta, Box box) {
-		
+
 		JLabel enunciado = new JLabel(pregunta.getPregunta());
 		enunciado.setAlignmentX(Component.CENTER_ALIGNMENT);
 		box.add(enunciado);
 		box.add(Box.createVerticalStrut(10));
 
-
-		ButtonGroup grupo = new ButtonGroup();
+		checkBoxesActuales = new ArrayList<>();
 		for (String opcion : pregunta.getOpciones()) {
-			JRadioButton radio = new JRadioButton(opcion);
-	        radio.setAlignmentX(Component.CENTER_ALIGNMENT);
-	        grupo.add(radio);
-	        box.add(radio);
+			JCheckBox check = new JCheckBox(opcion);
+			check.setAlignmentX(Component.CENTER_ALIGNMENT);
+			checkBoxesActuales.add(check);
+			box.add(check);
 		}
 	}
 
 	private void mostrarPreguntaRelleno(Relleno pregunta, Box box) {
-		
+
 		JLabel enunciado1 = new JLabel(pregunta.getPregunta());
 		enunciado1.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
-		JTextField texto = new JTextField(20);
-		texto.setMaximumSize(texto.getPreferredSize());
-		texto.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
+
+		campoTextoActual = new JTextField(20);
+		campoTextoActual.setMaximumSize(campoTextoActual.getPreferredSize());
+		campoTextoActual.setAlignmentX(Component.CENTER_ALIGNMENT);
+
 		JLabel enunciado2 = new JLabel(pregunta.getSegundaPreg());
 		enunciado2.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		box.add(enunciado1);
 		box.add(Box.createVerticalStrut(20));
-		box.add(texto);
+		box.add(campoTextoActual);
 		box.add(Box.createVerticalStrut(20));
 		box.add(enunciado2);
 	}
 
 	private void mostrarPreguntaTraduccion(Traduccion pregunta, Box box) {
-		
+
 		JLabel enunciado = new JLabel(pregunta.getPregunta());
 		enunciado.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
-		JTextField texto = new JTextField(30);
-		texto.setMaximumSize(texto.getPreferredSize());
-		texto.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		campoTextoActual = new JTextField(30);
+		campoTextoActual.setMaximumSize(campoTextoActual.getPreferredSize());
+		campoTextoActual.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		box.add(enunciado);
 		box.add(Box.createVerticalStrut(20));
-		box.add(texto);
+		box.add(campoTextoActual);
 	}
 }
