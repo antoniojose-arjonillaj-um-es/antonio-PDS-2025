@@ -166,6 +166,7 @@ public class Usuario {
 		}
 		return rachaActual;
 	}
+	
 	public void comenzarCurso() {
 		tickets--;
 	}

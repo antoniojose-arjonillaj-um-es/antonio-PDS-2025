@@ -3,6 +3,8 @@ package vistas;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +28,6 @@ import modelo.Pregunta;
 import modelo.Relleno;
 import modelo.Test;
 import modelo.Traduccion;
-import modelo.Usuario;
 import umu.pds.Controlador;
 
 public class VentanaTest {
@@ -54,11 +55,11 @@ public class VentanaTest {
 
 	// Constructor
 	public VentanaTest(Controlador controlador, Curso curso, String modalidad) {
-		
+
 		this.controlador = controlador;
 		this.curso = curso;
 		this.modalidad = modalidad;
-		
+
 		indiceActual = 0;
 		preguntas = curso.getPreguntasVacias();
 
@@ -66,7 +67,16 @@ public class VentanaTest {
 		frame = new JFrame();
 		frame.setTitle("Test de curso de " + curso.getNombre());
 		frame.setSize(500, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // TODO: Funcion de cierre
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (temporizador != null && temporizador.isRunning()) {
+					temporizador.stop();
+				}
+				controlador.pausarCurso(curso);
+			}
+		});
 
 		// Establecemos el panel contenedor
 		JPanel contentPane = new JPanel(new BorderLayout());
@@ -97,17 +107,17 @@ public class VentanaTest {
 		lblTemporizador.setVisible(false); // Por defecto oculto, sólo se muestra en contrarreloj
 
 		// Preparamos curso según modalidad escogida
-			// Aqui incluimos comportamiento general de futuros modos
+		// Aqui incluimos comportamiento general de futuros modos
 		switch (modalidad) {
 		case Controlador.ALEATORIO:
-			frame.setTitle(frame.getTitle()+"- Modalidad aleatoria");
+			frame.setTitle(frame.getTitle() + "- Modalidad aleatoria");
 			Collections.shuffle(preguntas); // Desordenamos preguntas
 			break;
 		case Controlador.CONTRARRELOJ:
-			frame.setTitle(frame.getTitle()+"- Modalidad contrareloj");
+			frame.setTitle(frame.getTitle() + "- Modalidad contrareloj");
 			break;
 		default: // defecto
-			frame.setTitle(frame.getTitle()+"- Modalidad defecto");
+			frame.setTitle(frame.getTitle() + "- Modalidad defecto");
 			break;
 		}
 
@@ -160,8 +170,8 @@ public class VentanaTest {
 
 		List<String> opciones = pregunta.getOpciones();
 		checkBoxes = new ArrayList<>();
-		
-		for (int i = 0; i<opciones.size(); i++) {
+
+		for (int i = 0; i < opciones.size(); i++) {
 			JCheckBox check = new JCheckBox(opciones.get(i));
 			check.setAlignmentX(Component.CENTER_ALIGNMENT);
 			check.setActionCommand(String.valueOf(i));
@@ -226,11 +236,11 @@ public class VentanaTest {
 
 	private void reiniciarTemporizador() {
 		if (modalidad.equals(Controlador.CONTRARRELOJ)) {
-	        if (temporizador != null && temporizador.isRunning()) {
-	            temporizador.stop();
-	        }
-	        iniciarTemporizador();
-	    }
+			if (temporizador != null && temporizador.isRunning()) {
+				temporizador.stop();
+			}
+			iniciarTemporizador();
+		}
 	}
 
 	private void actualizarEtiquetaTemporizador() {
@@ -243,7 +253,8 @@ public class VentanaTest {
 			indiceActual++;
 			mostrarPregunta();
 		} else {
-			JOptionPane.showMessageDialog(null, "Fin del test - modalidad: " + modalidad+"\n"+controlador.terminarCurso(curso));
+			JOptionPane.showMessageDialog(null,
+					"Fin del test - modalidad: " + modalidad + "\n" + controlador.terminarCurso(curso));
 			btnSiguiente.setEnabled(false);
 			frame.dispose();
 		}
@@ -260,8 +271,7 @@ public class VentanaTest {
 				}
 			}
 			respuestaUsuario = String.join(",", seleccionadas);
-		} else if ((preguntaActual instanceof Traduccion || preguntaActual instanceof Relleno)
-				&& txtActual != null) {
+		} else if ((preguntaActual instanceof Traduccion || preguntaActual instanceof Relleno) && txtActual != null) {
 			respuestaUsuario = txtActual.getText().trim();
 		}
 		controlador.corregirPregunta(curso, preguntaActual, respuestaUsuario);

@@ -11,6 +11,7 @@ import modelo.Relleno;
 import modelo.Test;
 import modelo.Traduccion;
 import modelo.Usuario;
+import vistas.VentanaLogin;
 import vistas.VentanaPrincipal;
 
 public class Lanzador {
@@ -32,7 +33,7 @@ public class Lanzador {
 		
 		Pregunta preguntaT = new Traduccion("PreguntaTraduccion", "respuesta");
 		Pregunta preguntaR = new Relleno("PrimeraParte", "SegundaParte", "respuesta");
-		Pregunta pregunta = new Test("Pregunta", List.of("Primera", "Segunda", "Tercera"), List.of(0,1));
+		Pregunta pregunta = new Test("Pregunta", List.of("Primera", "Segunda", "Tercera"), List.of(0));
 		List<Pregunta> lp = new ArrayList<Pregunta>();
 		lp.add(preguntaT);
 		lp.add(preguntaR);

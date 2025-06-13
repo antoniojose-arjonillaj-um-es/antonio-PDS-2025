@@ -5,7 +5,6 @@ import java.util.List;
 import modelo.Curso;
 import modelo.Pregunta;
 import modelo.Usuario;
-import vistas.VentanaLogin;
 
 /**
  * Hello world!
@@ -78,6 +77,14 @@ public class Controlador
 	public void reiniciarCurso(Usuario usuario, Curso curso) {
 		curso.reiniciarCurso();
 		iniciarCurso(usuario, curso);
+	}
+	
+	public void continuarCurso(Curso curso) {
+		curso.iniciar();
+	}
+	
+	public void pausarCurso(Curso curso) {
+		curso.pausar();
 	}
 	
 	public void corregirPregunta(Curso curso, Pregunta pregunta, String respuesta) {

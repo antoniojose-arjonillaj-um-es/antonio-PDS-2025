@@ -22,7 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import modelo.Curso;
-import modelo.Estado;
 import modelo.Usuario;
 import umu.pds.Controlador;
 
@@ -30,6 +29,7 @@ public class VentanaPrincipal {
 
 	// Constante
 	private static final double PROPORCION_IMG = 0.27;
+	private static final int ICONO = 30;
 
 	// Atributos
 	private Usuario usuario;
@@ -66,7 +66,7 @@ public class VentanaPrincipal {
 
 		JLabel imagenTckt = new JLabel("");
 		ImageIcon originalIcon = new ImageIcon(getClass().getResource("/recursos/entradas.png"));
-		Image scaledImage = originalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		Image scaledImage = originalIcon.getImage().getScaledInstance(ICONO, ICONO, Image.SCALE_SMOOTH);
 		imagenTckt.setIcon(new ImageIcon(scaledImage));
 
 		numeroTckt = new JLabel(Integer.toString(usuario.getTickets()));
@@ -180,7 +180,6 @@ public class VentanaPrincipal {
 	}
 
 	private void mostrarDialogoOpciones() {
-		// Panel personalizado
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.add(new JLabel("Elige curso a realizar:"));
@@ -210,17 +209,17 @@ public class VentanaPrincipal {
 				case PAUSADO:
 					int option = JOptionPane.showConfirmDialog(
 						    null,
-						    "Curso pausado con "+ cursoSelec.getContestadas() + "de un total de " + cursoSelec.getNumPreguntas() + 
-						    "¿quiere reiniciar?\nSI-Comenzar de cero\nNO-Continuar desde donde lo dejaste",
+						    "Curso pausado con "+ cursoSelec.getContestadas() + " pregunta respondida de " + cursoSelec.getNumPreguntas() + 
+						    "\n¿Quieres continuar desde donde lo dejaste?\nSI - Continuar desde donde lo dejaste\nNO - Comenzar de cero",
 						    "Confirmación",
 						    JOptionPane.YES_NO_CANCEL_OPTION
 						);
 					if(option == JOptionPane.YES_OPTION) {
-						controlador.reiniciarCurso(usuario, cursoSelec);
+						controlador.continuarCurso(cursoSelec);
 						new VentanaTest(controlador, cursoSelec, modoSelec);
-						
 					}
 					if(option == JOptionPane.NO_OPTION) {
+						controlador.reiniciarCurso(usuario, cursoSelec);
 						new VentanaTest(controlador, cursoSelec, modoSelec);
 					}
 					break;

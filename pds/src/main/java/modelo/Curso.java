@@ -50,7 +50,7 @@ public class Curso {
 	public int getCorrectas() {
 		int correctas = 0;
 		for (Boolean resultado : correcciones) {
-			if (resultado && resultado != null) {
+			if (resultado !=null && resultado) {
 				correctas++;
 			}
 		}
@@ -95,6 +95,11 @@ public class Curso {
 	// Método de clase
 	public void iniciar() {
 		setEstado(Estado.EN_PROCESO);
+	}
+	
+
+	public void pausar() {
+		setEstado(Estado.PAUSADO);	
 	}
 	
 	public String terminar() {
