@@ -1,6 +1,7 @@
 package vistas;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -14,12 +15,14 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import modelo.Curso;
 import modelo.Usuario;
 import umu.pds.Controlador;
 
@@ -27,7 +30,7 @@ public class VentanaPrincipal {
 
 	// Constante
 	private static final double PROPORCION_IMG = 0.27;
-	
+
 	// Atributos
 	private Usuario usuario;
 	private Controlador controlador;
@@ -43,7 +46,7 @@ public class VentanaPrincipal {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // TODO: Editar en futuro
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setSize((int) (screenSize.width * 0.5), (int) (screenSize.height * 0.5));
-		frame.setMinimumSize(new Dimension(550,300));
+		frame.setMinimumSize(new Dimension(550, 300));
 
 		// Establecemos el panel contenedor
 		JPanel contentPane = new JPanel();
@@ -54,7 +57,7 @@ public class VentanaPrincipal {
 		// Componentes de ventana
 		JLabel imagenUs = new JLabel("");
 		cargarImagen(imagenUs);
-		
+
 		JLabel nombreUs = new JLabel(usuario.getNombreUs());
 		JLabel tiempoUs = new JLabel("Tiempo uso total: " + Integer.toString(usuario.getTiempoUso()));
 
@@ -62,7 +65,7 @@ public class VentanaPrincipal {
 		ImageIcon originalIcon = new ImageIcon(getClass().getResource("/recursos/entradas.png"));
 		Image scaledImage = originalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		imagenTckt.setIcon(new ImageIcon(scaledImage));
-		
+
 		JLabel numeroTckt = new JLabel(Integer.toString(usuario.getTickets()));
 		JLabel rachaAct = new JLabel("Racha actual: " + Integer.toString(usuario.getRachaActual()));
 		JLabel rachaMax = new JLabel("Mejor racha: " + Integer.toString(usuario.getMejorRacha()));
@@ -78,7 +81,7 @@ public class VentanaPrincipal {
 		panelUs.add(tiempoUs);
 
 		// Panel para info tickets
-		JPanel panelTckt = new JPanel();
+		JPanel panelTckt = new JPanel(); 
 		panelTckt.setLayout(new BoxLayout(panelTckt, BoxLayout.X_AXIS));
 		panelTckt.add(numeroTckt);
 		panelTckt.add(Box.createHorizontalStrut(5));
@@ -95,9 +98,9 @@ public class VentanaPrincipal {
 		panelInfo.add(Box.createVerticalStrut(5));
 		panelInfo.add(rachaMax);
 		rachaMax.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
+
 		// Creamos panel superior con info usuario
-		JPanel panelSup = new JPanel();
+		JPanel panelSup = new JPanel(); 
 		panelSup.setLayout(new BoxLayout(panelSup, BoxLayout.X_AXIS));
 		panelSup.add(imagenUs);
 		panelSup.add(Box.createHorizontalStrut(10));
@@ -133,12 +136,12 @@ public class VentanaPrincipal {
 				System.out.println("Importar curso");
 			}
 		});
-		
+
 		// Evento para abrir curso
 		btnAbrir.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Abrir curso");
+				mostrarDialogoOpciones();
 			}
 		});
 
@@ -146,7 +149,7 @@ public class VentanaPrincipal {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
-	
+
 	private void cargarImagen(JLabel etiqueta) {
 		String imagen = this.usuario.getImagen();
 		ImageIcon originalIcon;
@@ -155,17 +158,44 @@ public class VentanaPrincipal {
 				// Cambiamos imagen de usuario
 				URL urlImagen = URI.create(imagen).toURL();
 				originalIcon = new ImageIcon(urlImagen);
-			} 
-			catch (Exception ex) {
-				JOptionPane.showMessageDialog(frame, "No se ha podido cargar la imagen de usuario", "Error", JOptionPane.ERROR_MESSAGE);
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(frame, "No se ha podido cargar la imagen de usuario", "Error",
+						JOptionPane.ERROR_MESSAGE);
 				originalIcon = new ImageIcon(getClass().getResource("/recursos/user_default.png"));
 			}
-		}else {
+		} else {
 			originalIcon = new ImageIcon(getClass().getResource("/recursos/user_default.png"));
 		}
 		int width = (int) (frame.getWidth() * PROPORCION_IMG);
 		int height = (int) (frame.getHeight() * PROPORCION_IMG);
 		Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
 		etiqueta.setIcon(new ImageIcon(scaledImage));
+	}
+
+	private void mostrarDialogoOpciones() {
+		// Panel personalizado
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(new JLabel("Elige curso a realizar:"));
+		panel.add(Box.createVerticalStrut(3));
+
+		panel.add(new JLabel("Curso:"));
+		JComboBox<Curso> comboCursos = new JComboBox<>(usuario.getCursos().toArray(new Curso[0]));
+		panel.add(comboCursos);
+		panel.add(Box.createVerticalStrut(3));
+
+		panel.add(new JLabel("Modo:"));
+		JComboBox<String> comboModo = new JComboBox<>(new String[] { Controlador.DEFECTO, Controlador.ALEATORIO, Controlador.CONTRARRELOJ });
+		panel.add(comboModo);
+
+		int resultado = JOptionPane.showConfirmDialog(null, panel, "Seleccionar Curso", JOptionPane.YES_NO_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
+
+		if (resultado == JOptionPane.YES_OPTION) {
+			Curso cursoSelec = (Curso) comboCursos.getSelectedItem();
+			String modoSelec = (String) comboModo.getSelectedItem();
+
+			new VentanaTest(controlador, usuario, cursoSelec, modoSelec);
+		}
 	}
 }
