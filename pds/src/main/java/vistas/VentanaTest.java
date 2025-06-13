@@ -44,13 +44,13 @@ public class VentanaTest {
 
 	// Atributos para obtener respuestas
 	private List<JCheckBox> checkBoxesActuales; // Para preguntas tipo test (multi)
-	private JTextField campoTextoActual; // Para preguntas de traducción o rellenar
+	private JTextField txtActual; // Para preguntas de traducción o rellenar
 	private Pregunta preguntaActual; // Para saber qué tipo de pregunta es
 
 	// Atributos para modalidades
 	private List<Pregunta> preguntas; // Lista de preguntas real, según modalidad
 	private Timer temporizador;
-	private JLabel etiquetaTemporizador;
+	private JLabel lblTemporizador;
 	private int segRestantes;
 
 	// Constructor
@@ -60,6 +60,7 @@ public class VentanaTest {
 		this.usuario = usuario;
 		this.curso = curso;
 		this.modalidad = modalidad;
+		
 		indiceActual = 0;
 
 		// Inicializamos frame principal
@@ -99,10 +100,10 @@ public class VentanaTest {
 		contentPane.add(panelBoton, BorderLayout.SOUTH);
 
 		// Etiqueta de tiempo
-		etiquetaTemporizador = new JLabel("Tiempo restante: 10 s");
-		etiquetaTemporizador.setHorizontalAlignment(SwingConstants.CENTER);
-		frame.getContentPane().add(etiquetaTemporizador, BorderLayout.NORTH);
-		etiquetaTemporizador.setVisible(false); // Por defecto oculto, sólo se muestra en contrarreloj
+		lblTemporizador = new JLabel("Tiempo restante: 10 s");
+		lblTemporizador.setHorizontalAlignment(SwingConstants.CENTER);
+		frame.getContentPane().add(lblTemporizador, BorderLayout.NORTH);
+		lblTemporizador.setVisible(false); // Por defecto oculto, sólo se muestra en contrarreloj
 
 		// Preparamos curso según modalidad escogida
 		switch (modalidad) {
@@ -110,12 +111,7 @@ public class VentanaTest {
 			preguntas = new ArrayList<>(curso.getPreguntas());
 			Collections.shuffle(preguntas); // Desordenamos preguntas
 			break;
-
-		case Controlador.CONTRARRELOJ:
-			preguntas = curso.getPreguntas();
-			iniciarTemporizador(); // Lanzamos el temporizador
-			break;
-
+			
 		default: // defecto
 			preguntas = curso.getPreguntas();
 		}
@@ -181,16 +177,16 @@ public class VentanaTest {
 		JLabel enunciado1 = new JLabel(pregunta.getPregunta());
 		enunciado1.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		campoTextoActual = new JTextField(20);
-		campoTextoActual.setMaximumSize(campoTextoActual.getPreferredSize());
-		campoTextoActual.setAlignmentX(Component.CENTER_ALIGNMENT);
+		txtActual = new JTextField(20);
+		txtActual.setMaximumSize(txtActual.getPreferredSize());
+		txtActual.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		JLabel enunciado2 = new JLabel(pregunta.getSegundaPreg());
 		enunciado2.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		box.add(enunciado1);
 		box.add(Box.createVerticalStrut(20));
-		box.add(campoTextoActual);
+		box.add(txtActual);
 		box.add(Box.createVerticalStrut(20));
 		box.add(enunciado2);
 	}
@@ -200,18 +196,18 @@ public class VentanaTest {
 		JLabel enunciado = new JLabel(pregunta.getPregunta());
 		enunciado.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		campoTextoActual = new JTextField(30);
-		campoTextoActual.setMaximumSize(campoTextoActual.getPreferredSize());
-		campoTextoActual.setAlignmentX(Component.CENTER_ALIGNMENT);
+		txtActual = new JTextField(30);
+		txtActual.setMaximumSize(txtActual.getPreferredSize());
+		txtActual.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		box.add(enunciado);
 		box.add(Box.createVerticalStrut(20));
-		box.add(campoTextoActual);
+		box.add(txtActual);
 	}
 
 	private void iniciarTemporizador() {
 		segRestantes = 10;
-		etiquetaTemporizador.setVisible(true);
+		lblTemporizador.setVisible(true);
 		actualizarEtiquetaTemporizador();
 
 		if (temporizador != null && temporizador.isRunning()) {
@@ -240,7 +236,7 @@ public class VentanaTest {
 	}
 
 	private void actualizarEtiquetaTemporizador() {
-		etiquetaTemporizador.setText("Tiempo restante: " + segRestantes + " s");
+		lblTemporizador.setText("Tiempo restante: " + segRestantes + " s");
 	}
 
 	private void avanzarAutomaticamente() {
@@ -267,10 +263,9 @@ public class VentanaTest {
 			}
 			respuestaUsuario = String.join(", ", seleccionadas);
 		} else if ((preguntaActual instanceof Traduccion || preguntaActual instanceof Relleno)
-				&& campoTextoActual != null) {
-			respuestaUsuario = campoTextoActual.getText().trim();
+				&& txtActual != null) {
+			respuestaUsuario = txtActual.getText().trim();
 		}
-
 		System.out.println("Respuesta del usuario: " + respuestaUsuario);
 	}
 }
