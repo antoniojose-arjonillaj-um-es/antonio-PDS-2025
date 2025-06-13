@@ -1,6 +1,7 @@
 package vistas;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -80,7 +81,7 @@ public class VentanaPrincipal {
 		panelUs.add(tiempoUs);
 
 		// Panel para info tickets
-		JPanel panelTckt = new JPanel();
+		JPanel panelTckt = new JPanel(); 
 		panelTckt.setLayout(new BoxLayout(panelTckt, BoxLayout.X_AXIS));
 		panelTckt.add(numeroTckt);
 		panelTckt.add(Box.createHorizontalStrut(5));
@@ -99,7 +100,7 @@ public class VentanaPrincipal {
 		rachaMax.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		// Creamos panel superior con info usuario
-		JPanel panelSup = new JPanel();
+		JPanel panelSup = new JPanel(); 
 		panelSup.setLayout(new BoxLayout(panelSup, BoxLayout.X_AXIS));
 		panelSup.add(imagenUs);
 		panelSup.add(Box.createHorizontalStrut(10));
@@ -184,19 +185,17 @@ public class VentanaPrincipal {
 		panel.add(Box.createVerticalStrut(3));
 
 		panel.add(new JLabel("Modo:"));
-		JComboBox<String> comboModo = new JComboBox<>(new String[] { "Aleatorio", "Espaciado", "Defecto" });
+		JComboBox<String> comboModo = new JComboBox<>(new String[] { Controlador.DEFECTO, Controlador.ALEATORIO, Controlador.CONTRARRELOJ });
 		panel.add(comboModo);
 
 		int resultado = JOptionPane.showConfirmDialog(null, panel, "Seleccionar Curso", JOptionPane.YES_NO_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
 
 		if (resultado == JOptionPane.YES_OPTION) {
-			Curso cursoSeleccionado = (Curso) comboCursos.getSelectedItem();
-			String modoSeleccionado = (String) comboModo.getSelectedItem();
+			Curso cursoSelec = (Curso) comboCursos.getSelectedItem();
+			String modoSelec = (String) comboModo.getSelectedItem();
 
-			JOptionPane.showMessageDialog(null, "Curso: " + cursoSeleccionado + "\nModo: " + modoSeleccionado,
-					"Confirmación", JOptionPane.INFORMATION_MESSAGE);
-
+			new VentanaTest(controlador, usuario, cursoSelec, modoSelec);
 		}
 	}
 }

@@ -103,4 +103,9 @@ public class Curso {
 		this.ultima=0;
 		this.correcciones=new ArrayList<>(Collections.nCopies(preguntas.size(), null));
 	}
+	
+	@Override
+	public String toString() {
+		return nombre;
+	}
 }
