@@ -2,6 +2,8 @@ package umu.pds;
 
 import java.util.List;
 
+import modelo.Curso;
+import modelo.Pregunta;
 import modelo.Usuario;
 import vistas.VentanaLogin;
 
@@ -62,5 +64,14 @@ public class Controlador
 		Usuario user = new Usuario(datos.get(NOMB), datos.get(CONT), datos.get(IMAG), Integer.parseInt(datos.get(TELF)));
 		//TODO: Guardar en repositorio y en persistencia
 		return ACIERTO;
+	}
+
+	public void iniciarCurso(Usuario usuario, Curso curso) {
+		usuario.comenzarCurso();
+		curso.iniciar();
+	}
+
+	public void corregirPregunta(Curso curso, Pregunta pregunta, String respuesta) {
+		curso.corregirPregunta(pregunta, respuesta);
 	}
 }

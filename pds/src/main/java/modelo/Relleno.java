@@ -33,8 +33,8 @@ public class Relleno extends Pregunta{
 
 	// Métodos de clase
 	@Override
-	public boolean comprobarRespuesta(String dato) {
-		return respuesta.contains(dato);
+	public boolean corregir(String dato) {
+		return respuesta.equals(dato);
 	}
 
 }

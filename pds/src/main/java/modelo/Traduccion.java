@@ -22,7 +22,7 @@ public class Traduccion extends Pregunta{
 
 	// Métodos de clase
 	@Override
-	public boolean comprobarRespuesta(String dato) {
+	public boolean corregir(String dato) {
 		return respuesta.equals(dato);
 	}
 

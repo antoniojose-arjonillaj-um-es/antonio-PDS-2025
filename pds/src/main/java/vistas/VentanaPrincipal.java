@@ -35,6 +35,9 @@ public class VentanaPrincipal {
 	private Usuario usuario;
 	private Controlador controlador;
 
+	private JLabel tiempoUs;
+	private JLabel numeroTckt;
+
 	private JFrame frame;
 
 	public VentanaPrincipal(Controlador controlador, Usuario usuario) {
@@ -59,14 +62,14 @@ public class VentanaPrincipal {
 		cargarImagen(imagenUs);
 
 		JLabel nombreUs = new JLabel(usuario.getNombreUs());
-		JLabel tiempoUs = new JLabel("Tiempo uso total: " + Integer.toString(usuario.getTiempoUso()));
+		tiempoUs = new JLabel("Tiempo uso total: " + Integer.toString(usuario.getTiempoUso()));
 
 		JLabel imagenTckt = new JLabel("");
 		ImageIcon originalIcon = new ImageIcon(getClass().getResource("/recursos/entradas.png"));
 		Image scaledImage = originalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		imagenTckt.setIcon(new ImageIcon(scaledImage));
 
-		JLabel numeroTckt = new JLabel(Integer.toString(usuario.getTickets()));
+		numeroTckt = new JLabel(Integer.toString(usuario.getTickets()));
 		JLabel rachaAct = new JLabel("Racha actual: " + Integer.toString(usuario.getRachaActual()));
 		JLabel rachaMax = new JLabel("Mejor racha: " + Integer.toString(usuario.getMejorRacha()));
 
@@ -81,7 +84,7 @@ public class VentanaPrincipal {
 		panelUs.add(tiempoUs);
 
 		// Panel para info tickets
-		JPanel panelTckt = new JPanel(); 
+		JPanel panelTckt = new JPanel();
 		panelTckt.setLayout(new BoxLayout(panelTckt, BoxLayout.X_AXIS));
 		panelTckt.add(numeroTckt);
 		panelTckt.add(Box.createHorizontalStrut(5));
@@ -100,7 +103,7 @@ public class VentanaPrincipal {
 		rachaMax.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		// Creamos panel superior con info usuario
-		JPanel panelSup = new JPanel(); 
+		JPanel panelSup = new JPanel();
 		panelSup.setLayout(new BoxLayout(panelSup, BoxLayout.X_AXIS));
 		panelSup.add(imagenUs);
 		panelSup.add(Box.createHorizontalStrut(10));
@@ -141,7 +144,11 @@ public class VentanaPrincipal {
 		btnAbrir.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mostrarDialogoOpciones();
+				if (usuario.getTickets() > 0) {
+					mostrarDialogoOpciones();
+					actualizarVentana();
+				} else
+					JOptionPane.showConfirmDialog(null, "No tienes suficientes vidas", ":(", JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 
@@ -185,7 +192,8 @@ public class VentanaPrincipal {
 		panel.add(Box.createVerticalStrut(3));
 
 		panel.add(new JLabel("Modo:"));
-		JComboBox<String> comboModo = new JComboBox<>(new String[] { Controlador.DEFECTO, Controlador.ALEATORIO, Controlador.CONTRARRELOJ });
+		JComboBox<String> comboModo = new JComboBox<>(
+				new String[] { Controlador.DEFECTO, Controlador.ALEATORIO, Controlador.CONTRARRELOJ });
 		panel.add(comboModo);
 
 		int resultado = JOptionPane.showConfirmDialog(null, panel, "Seleccionar Curso", JOptionPane.YES_NO_OPTION,
@@ -194,8 +202,18 @@ public class VentanaPrincipal {
 		if (resultado == JOptionPane.YES_OPTION) {
 			Curso cursoSelec = (Curso) comboCursos.getSelectedItem();
 			String modoSelec = (String) comboModo.getSelectedItem();
+			
+			this.controlador.iniciarCurso(usuario, cursoSelec);
 
-			new VentanaTest(controlador, usuario, cursoSelec, modoSelec);
+			new VentanaTest(this, controlador, usuario, cursoSelec, modoSelec);
 		}
+	}
+
+	public void actualizarVentana() {
+		tiempoUs.setText("Tiempo uso total: " + Integer.toString(usuario.getTiempoUso()));
+		numeroTckt.setText(Integer.toString(usuario.getTickets()));
+		
+		frame.revalidate();
+		frame.repaint();
 	}
 }

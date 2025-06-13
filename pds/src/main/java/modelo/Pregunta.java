@@ -19,5 +19,5 @@ public abstract class Pregunta {
 	}
 	
 	// Métodos de clase
-	public abstract boolean comprobarRespuesta(String dato);
+	public abstract boolean corregir(String dato);
 }

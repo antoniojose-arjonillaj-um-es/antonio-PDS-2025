@@ -37,7 +37,9 @@ public class Test extends Pregunta{
 
 	// Métodos de clase
 	@Override
-	public boolean comprobarRespuesta(String dato) {
+	public boolean corregir(String dato) {
+		if (dato.isEmpty() || dato==null)
+			return false;
 		List<Integer> numeros = Arrays.stream(dato.split(","))
                 					  .map(Integer::parseInt)
                 					  .collect(Collectors.toList());

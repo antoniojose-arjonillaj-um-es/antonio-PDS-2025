@@ -31,6 +31,7 @@ import umu.pds.Controlador;
 
 public class VentanaTest {
 	// Atributos generales
+	private VentanaPrincipal referencia;
 	private Controlador controlador;
 	private Usuario usuario;
 	private Curso curso;
@@ -43,7 +44,7 @@ public class VentanaTest {
 	private JButton btnSiguiente;
 
 	// Atributos para obtener respuestas
-	private List<JCheckBox> checkBoxesActuales; // Para preguntas tipo test (multi)
+	private List<JCheckBox> checkBoxes; // Para preguntas tipo test (multi)
 	private JTextField txtActual; // Para preguntas de traducción o rellenar
 	private Pregunta preguntaActual; // Para saber qué tipo de pregunta es
 
@@ -54,14 +55,16 @@ public class VentanaTest {
 	private int segRestantes;
 
 	// Constructor
-	public VentanaTest(Controlador controlador, Usuario usuario, Curso curso, String modalidad) {
-
+	public VentanaTest(VentanaPrincipal ref, Controlador controlador, Usuario usuario, Curso curso, String modalidad) {
+		
+		this.referencia = ref;
 		this.controlador = controlador;
 		this.usuario = usuario;
 		this.curso = curso;
 		this.modalidad = modalidad;
 		
 		indiceActual = 0;
+		preguntas = curso.getPreguntasVacias();
 
 		// Inicializamos frame principal
 		frame = new JFrame();
@@ -86,7 +89,7 @@ public class VentanaTest {
 		btnSiguiente = new JButton("Siguiente");
 		btnSiguiente.addActionListener(e -> {
 			recogerRespuestaActual();
-			if (indiceActual < curso.getPreguntas().size() - 1) {
+			if (indiceActual < preguntas.size() - 1) {
 				indiceActual++;
 				mostrarPregunta();
 			} else {
@@ -106,15 +109,20 @@ public class VentanaTest {
 		lblTemporizador.setVisible(false); // Por defecto oculto, sólo se muestra en contrarreloj
 
 		// Preparamos curso según modalidad escogida
+			// Aqui incluimos comportamiento general de futuros modos
 		switch (modalidad) {
 		case Controlador.ALEATORIO:
-			preguntas = new ArrayList<>(curso.getPreguntas());
+			frame.setTitle(frame.getTitle()+"- Modalidad aleatoria");
 			Collections.shuffle(preguntas); // Desordenamos preguntas
 			break;
-			
+		case Controlador.CONTRARRELOJ:
+			frame.setTitle(frame.getTitle()+"- Modalidad contrareloj");
+			break;
 		default: // defecto
-			preguntas = curso.getPreguntas();
+			frame.setTitle(frame.getTitle()+"- Modalidad defecto");
+			break;
 		}
+
 
 		mostrarPregunta();
 
@@ -163,11 +171,14 @@ public class VentanaTest {
 		box.add(enunciado);
 		box.add(Box.createVerticalStrut(10));
 
-		checkBoxesActuales = new ArrayList<>();
-		for (String opcion : pregunta.getOpciones()) {
-			JCheckBox check = new JCheckBox(opcion);
+		List<String> opciones = pregunta.getOpciones();
+		checkBoxes = new ArrayList<>();
+		
+		for (int i = 0; i<opciones.size(); i++) {
+			JCheckBox check = new JCheckBox(opciones.get(i));
 			check.setAlignmentX(Component.CENTER_ALIGNMENT);
-			checkBoxesActuales.add(check);
+			check.setActionCommand(String.valueOf(i));
+			checkBoxes.add(check);
 			box.add(check);
 		}
 	}
@@ -254,18 +265,18 @@ public class VentanaTest {
 	private void recogerRespuestaActual() {
 		String respuestaUsuario = "";
 
-		if (preguntaActual instanceof Test && checkBoxesActuales != null) {
+		if (preguntaActual instanceof Test && checkBoxes != null) {
 			List<String> seleccionadas = new ArrayList<>();
-			for (JCheckBox check : checkBoxesActuales) {
+			for (JCheckBox check : checkBoxes) {
 				if (check.isSelected()) {
-					seleccionadas.add(check.getText());
+					seleccionadas.add(check.getActionCommand());
 				}
 			}
-			respuestaUsuario = String.join(", ", seleccionadas);
+			respuestaUsuario = String.join(",", seleccionadas);
 		} else if ((preguntaActual instanceof Traduccion || preguntaActual instanceof Relleno)
 				&& txtActual != null) {
 			respuestaUsuario = txtActual.getText().trim();
 		}
-		System.out.println("Respuesta del usuario: " + respuestaUsuario);
+		controlador.corregirPregunta(curso, preguntaActual, respuestaUsuario);
 	}
 }

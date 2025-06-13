@@ -64,11 +64,11 @@ public class Usuario {
 		return cursos;
 	}
 
-	public int getTickets() {
+	public int getTickets() { // TODO: Hacerla propiedad calculada?
 		return tickets;
 	}
 
-	public int getTiempoUso() {
+	public int getTiempoUso() { // TODO: Hacerla propiedad calculada
 		return tiempoUso;
 	}
 
@@ -165,5 +165,8 @@ public class Usuario {
 			mejorRacha = rachaActual;
 		}
 		return rachaActual;
+	}
+	public void comenzarCurso() {
+		tickets--;
 	}
 }
