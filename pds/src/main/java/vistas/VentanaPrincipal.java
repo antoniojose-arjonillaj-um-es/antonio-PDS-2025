@@ -1,7 +1,6 @@
 package vistas;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -23,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import modelo.Curso;
+import modelo.Estado;
 import modelo.Usuario;
 import umu.pds.Controlador;
 
@@ -203,9 +203,44 @@ public class VentanaPrincipal {
 			Curso cursoSelec = (Curso) comboCursos.getSelectedItem();
 			String modoSelec = (String) comboModo.getSelectedItem();
 			
-			this.controlador.iniciarCurso(usuario, cursoSelec);
-
-			new VentanaTest(this, controlador, usuario, cursoSelec, modoSelec);
+			switch(cursoSelec.getEstado()) {
+				case EN_PROCESO:
+					JOptionPane.showMessageDialog(null, "Curso ya en ejecucion", "Error", JOptionPane.WARNING_MESSAGE);
+					break;
+				case PAUSADO:
+					int option = JOptionPane.showConfirmDialog(
+						    null,
+						    "Curso pausado con "+ cursoSelec.getContestadas() + "de un total de " + cursoSelec.getNumPreguntas() + 
+						    "¿quiere reiniciar?\nSI-Comenzar de cero\nNO-Continuar desde donde lo dejaste",
+						    "Confirmación",
+						    JOptionPane.YES_NO_CANCEL_OPTION
+						);
+					if(option == JOptionPane.YES_OPTION) {
+						controlador.reiniciarCurso(usuario, cursoSelec);
+						new VentanaTest(controlador, cursoSelec, modoSelec);
+						
+					}
+					if(option == JOptionPane.NO_OPTION) {
+						new VentanaTest(controlador, cursoSelec, modoSelec);
+					}
+					break;
+				case FINALIZADO:
+					int opcion = JOptionPane.showConfirmDialog(
+						    null,
+						    "Curso ya completado con\n"+cursoSelec.getResultados()+"\n¿Seguro que quiere continuar?",
+						    "Confirmación",
+						    JOptionPane.YES_NO_OPTION
+						);
+					if (opcion == JOptionPane.YES_OPTION) {
+						controlador.reiniciarCurso(usuario, cursoSelec);
+						new VentanaTest(controlador, cursoSelec, modoSelec);
+					}
+					break;
+				default: // Sin iniciar
+					controlador.iniciarCurso(usuario, cursoSelec);
+					new VentanaTest(controlador, cursoSelec, modoSelec);
+					break;
+			}
 		}
 	}
 

@@ -31,9 +31,7 @@ import umu.pds.Controlador;
 
 public class VentanaTest {
 	// Atributos generales
-	private VentanaPrincipal referencia;
 	private Controlador controlador;
-	private Usuario usuario;
 	private Curso curso;
 	private String modalidad;
 	private int indiceActual;
@@ -55,11 +53,9 @@ public class VentanaTest {
 	private int segRestantes;
 
 	// Constructor
-	public VentanaTest(VentanaPrincipal ref, Controlador controlador, Usuario usuario, Curso curso, String modalidad) {
+	public VentanaTest(Controlador controlador, Curso curso, String modalidad) {
 		
-		this.referencia = ref;
 		this.controlador = controlador;
-		this.usuario = usuario;
 		this.curso = curso;
 		this.modalidad = modalidad;
 		
@@ -88,15 +84,7 @@ public class VentanaTest {
 		// Creamos el componente botón y su panel para mantener su espacio
 		btnSiguiente = new JButton("Siguiente");
 		btnSiguiente.addActionListener(e -> {
-			recogerRespuestaActual();
-			if (indiceActual < preguntas.size() - 1) {
-				indiceActual++;
-				mostrarPregunta();
-			} else {
-				JOptionPane.showMessageDialog(null, "Fin del test."); // TODO: Añadir correcciones
-				btnSiguiente.setEnabled(false);
-				frame.dispose();
-			}
+			avanzarPregunta();
 		});
 		JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		panelBoton.add(btnSiguiente);
@@ -122,7 +110,6 @@ public class VentanaTest {
 			frame.setTitle(frame.getTitle()+"- Modalidad defecto");
 			break;
 		}
-
 
 		mostrarPregunta();
 
@@ -231,7 +218,7 @@ public class VentanaTest {
 
 			if (segRestantes <= 0) {
 				temporizador.stop();
-				avanzarAutomaticamente();
+				avanzarPregunta();
 			}
 		});
 		temporizador.start();
@@ -250,13 +237,13 @@ public class VentanaTest {
 		lblTemporizador.setText("Tiempo restante: " + segRestantes + " s");
 	}
 
-	private void avanzarAutomaticamente() {
+	private void avanzarPregunta() {
 		recogerRespuestaActual(); // Obtener la respuesta antes de pasar
 		if (indiceActual < preguntas.size() - 1) {
 			indiceActual++;
 			mostrarPregunta();
 		} else {
-			JOptionPane.showMessageDialog(null, "Fin del test (Fin del tiempo).");
+			JOptionPane.showMessageDialog(null, "Fin del test - modalidad: " + modalidad+"\n"+controlador.terminarCurso(curso));
 			btnSiguiente.setEnabled(false);
 			frame.dispose();
 		}

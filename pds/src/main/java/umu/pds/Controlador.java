@@ -70,8 +70,19 @@ public class Controlador
 		usuario.comenzarCurso();
 		curso.iniciar();
 	}
+	
+	public String terminarCurso(Curso curso) {
+		return curso.terminar();
+	}
 
+	public void reiniciarCurso(Usuario usuario, Curso curso) {
+		curso.reiniciarCurso();
+		iniciarCurso(usuario, curso);
+	}
+	
 	public void corregirPregunta(Curso curso, Pregunta pregunta, String respuesta) {
 		curso.corregirPregunta(pregunta, respuesta);
 	}
+
+	
 }

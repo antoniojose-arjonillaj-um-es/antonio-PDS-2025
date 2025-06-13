@@ -10,7 +10,7 @@ public class Curso {
 	private String nombre; // Nombre curso
 	private List<Pregunta> preguntas; // Lista de preguntas
 	private List<Boolean> correcciones; // Estado de respuestas dadas
-	private int ultima; // Ultima pregunta consultada
+	private int contestadas; // Ultima pregunta consultada
 	private Estado estado; // Estado del curso
 
 	// Constructor
@@ -18,7 +18,7 @@ public class Curso {
 		this.nombre = nombre;
 		this.preguntas = preguntas;
 		this.estado = Estado.SIN_EMPEZAR;
-		this.ultima = 0;
+		this.contestadas = 0;
 		this.correcciones = new ArrayList<>(Collections.nCopies(preguntas.size(), null));
 	}
 
@@ -39,8 +39,8 @@ public class Curso {
 		return correcciones;
 	}
 
-	public int getUltima() {
-		return ultima;
+	public int getContestadas() {
+		return contestadas;
 	}
 
 	public Estado getEstado() {
@@ -66,6 +66,10 @@ public class Curso {
 		}
 		return incorrectas;
 	}
+	
+	public String getResultados() {
+		return "Correctas: "+getCorrectas()+"\nIncorrectas: "+getIncorrectas();
+	}
 
 	// Setters
 	public void setNombre(String nombre) {
@@ -79,9 +83,9 @@ public class Curso {
 	public void setCorrecciones(List<Boolean> correcciones) {
 		this.correcciones = correcciones;
 	}
-
-	public void setUltima(int ultima) {
-		this.ultima = ultima;
+	
+	public void setContestadas(int contestadas) {
+		this.contestadas=contestadas;
 	}
 
 	public void setEstado(Estado estado) {
@@ -91,6 +95,11 @@ public class Curso {
 	// Método de clase
 	public void iniciar() {
 		setEstado(Estado.EN_PROCESO);
+	}
+	
+	public String terminar() {
+		setEstado(Estado.FINALIZADO);
+		return "Resultados:\n"+getResultados();
 	}
 
 	// Retorna preguntas sin responder
@@ -110,22 +119,12 @@ public class Curso {
 			    .findFirst()
 			    .orElse(-1);
 		correcciones.set(indice, resultado);
-		System.out.println(resultado);
-	}
-
-	public void siguientePreg(boolean resultado) {
-		correcciones.set(ultima, resultado);
-		if (ultima < getNumPreguntas()) {
-			ultima++;
-			estado = Estado.EN_PROCESO;
-		}
-		ultima = -1;
-		estado = Estado.FINALIZADO;
+		contestadas++;
 	}
 
 	public void reiniciarCurso() {
 		this.estado = Estado.SIN_EMPEZAR;
-		this.ultima = 0;
+		this.contestadas = 0;
 		this.correcciones = new ArrayList<>(Collections.nCopies(preguntas.size(), null));
 	}
 
