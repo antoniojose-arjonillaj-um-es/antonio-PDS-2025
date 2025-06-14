@@ -41,7 +41,7 @@ public class Usuario {
 
 		this.ultimaSes = null;
 		this.inicioSes = null;
-		
+
 	}
 
 	// Getters
@@ -65,12 +65,17 @@ public class Usuario {
 		return cursos;
 	}
 
-	public int getTickets() { // TODO: Hacerla propiedad calculada?
+	public int getTickets() {
 		return tickets;
 	}
 
-	public int getTiempoUso() { // TODO: Hacerla propiedad calculada
-		return tiempoUso;
+	// Propiedad calculada para mostrar actualizacion de horas cada
+	// vez que se hace un curso
+	public int getTiempoUso() {
+		int aux = tiempoUso;
+		Duration duracion = Duration.between(inicioSes, LocalDateTime.now());
+		aux += duracion.toHoursPart();
+		return aux;
 	}
 
 	public int getMejorRacha() {
