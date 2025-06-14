@@ -9,6 +9,10 @@ public class Relleno extends Pregunta {
 	public String respuesta;
 
 	// Constructor
+	public Relleno() {
+		super("");
+	}
+
 	public Relleno(String preg, String seg, String resp) {
 		super(preg);
 		this.segundaPreg = seg;

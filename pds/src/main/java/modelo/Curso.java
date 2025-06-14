@@ -36,6 +36,8 @@ public class Curso {
 	private Estado estado; // Estado del curso
 
 	// Constructor
+	public Curso(){}
+	
 	public Curso(String nombre, List<Pregunta> preguntas) {
 		this.nombre = nombre;
 		this.preguntas = preguntas;

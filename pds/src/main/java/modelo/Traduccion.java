@@ -9,6 +9,10 @@ public class Traduccion extends Pregunta {
 	private String respuesta;
 
 	// Constructor
+	public Traduccion() {
+		super("");
+	}
+
 	public Traduccion(String preg, String resp) {
 		super(preg);
 		this.respuesta = resp;

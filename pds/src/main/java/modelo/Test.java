@@ -17,6 +17,10 @@ public class Test extends Pregunta {
 	private List<String> opciones;
 
 	// Constructor
+	public Test() {
+		super("");
+	}
+
 	public Test(String preg, List<String> opc, List<Integer> resp) {
 		super(preg);
 		this.opciones = opc;
@@ -24,7 +28,7 @@ public class Test extends Pregunta {
 	}
 
 	// Getters
-	public List<Integer> getRespuesta() {
+	public List<Integer> getRespuestas() {
 		return respuestas;
 	}
 
@@ -33,7 +37,7 @@ public class Test extends Pregunta {
 	}
 
 	// Setters
-	public void setRespuesta(List<Integer> res) {
+	public void setRespuestas(List<Integer> res) {
 		this.respuestas = res;
 	}
 
