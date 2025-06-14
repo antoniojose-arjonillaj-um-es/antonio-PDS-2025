@@ -1,18 +1,17 @@
 package modelo;
 
-public class Relleno extends Pregunta{
+public class Relleno extends Pregunta {
 	// Atributo
 	public String segundaPreg;
 	public String respuesta;
-	
+
 	// Constructor
 	public Relleno(String preg, String seg, String resp) {
 		super(preg);
-		this.segundaPreg=seg;
-		this.respuesta=resp;
+		this.segundaPreg = seg;
+		this.respuesta = resp;
 	}
 
-	
 	// Getters
 	public String getSegundaPreg() {
 		return segundaPreg;
@@ -33,8 +32,8 @@ public class Relleno extends Pregunta{
 
 	// Métodos de clase
 	@Override
-	public boolean comprobarRespuesta(String dato) {
-		return respuesta.contains(dato);
+	public boolean corregir(String dato) {
+		return respuesta.equals(dato);
 	}
 
 }

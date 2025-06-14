@@ -1,13 +1,16 @@
 package vistas;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.URI;
 import java.net.URL;
 
@@ -30,10 +33,15 @@ public class VentanaPrincipal {
 
 	// Constante
 	private static final double PROPORCION_IMG = 0.27;
+	private static final int ICONO = 30;
+	private static final double FRAME_SIZE = 0.5;
 
 	// Atributos
 	private Usuario usuario;
 	private Controlador controlador;
+
+	private JLabel tiempoUs;
+	private JLabel numeroTckt;
 
 	private JFrame frame;
 
@@ -43,10 +51,22 @@ public class VentanaPrincipal {
 
 		// Crear el marco principal
 		frame = new JFrame("Copialingo - Principal");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // TODO: Editar en futuro
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setSize((int) (screenSize.width * 0.5), (int) (screenSize.height * 0.5));
+		frame.setSize((int) (screenSize.width * FRAME_SIZE), (int) (screenSize.height * FRAME_SIZE));
 		frame.setMinimumSize(new Dimension(550, 300));
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (controlador.logout(usuario))
+					frame.dispose();
+				else {
+					JOptionPane.showConfirmDialog(null,
+							"ERROR: CURSOS ABIERTOS\nCierra el/los cursos abiertos antes de hacer logout", "-_-",
+							JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
 
 		// Establecemos el panel contenedor
 		JPanel contentPane = new JPanel();
@@ -56,17 +76,29 @@ public class VentanaPrincipal {
 
 		// Componentes de ventana
 		JLabel imagenUs = new JLabel("");
+		imagenUs.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					String nuevaUrl = JOptionPane.showInputDialog(frame, "Introduce la URL de la imagen:");
+					if (nuevaUrl != null) {
+						controlador.cambiarImagen(usuario, nuevaUrl);
+						cargarImagen(imagenUs);
+					}
+				}
+			}
+		});
 		cargarImagen(imagenUs);
 
 		JLabel nombreUs = new JLabel(usuario.getNombreUs());
-		JLabel tiempoUs = new JLabel("Tiempo uso total: " + Integer.toString(usuario.getTiempoUso()));
+		tiempoUs = new JLabel("Tiempo uso total: " + Integer.toString(usuario.getTiempoUso()) + " horas");
 
 		JLabel imagenTckt = new JLabel("");
 		ImageIcon originalIcon = new ImageIcon(getClass().getResource("/recursos/entradas.png"));
-		Image scaledImage = originalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		Image scaledImage = originalIcon.getImage().getScaledInstance(ICONO, ICONO, Image.SCALE_SMOOTH);
 		imagenTckt.setIcon(new ImageIcon(scaledImage));
 
-		JLabel numeroTckt = new JLabel(Integer.toString(usuario.getTickets()));
+		numeroTckt = new JLabel(Integer.toString(usuario.getTickets()));
 		JLabel rachaAct = new JLabel("Racha actual: " + Integer.toString(usuario.getRachaActual()));
 		JLabel rachaMax = new JLabel("Mejor racha: " + Integer.toString(usuario.getMejorRacha()));
 
@@ -81,7 +113,7 @@ public class VentanaPrincipal {
 		panelUs.add(tiempoUs);
 
 		// Panel para info tickets
-		JPanel panelTckt = new JPanel(); 
+		JPanel panelTckt = new JPanel();
 		panelTckt.setLayout(new BoxLayout(panelTckt, BoxLayout.X_AXIS));
 		panelTckt.add(numeroTckt);
 		panelTckt.add(Box.createHorizontalStrut(5));
@@ -100,7 +132,7 @@ public class VentanaPrincipal {
 		rachaMax.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		// Creamos panel superior con info usuario
-		JPanel panelSup = new JPanel(); 
+		JPanel panelSup = new JPanel();
 		panelSup.setLayout(new BoxLayout(panelSup, BoxLayout.X_AXIS));
 		panelSup.add(imagenUs);
 		panelSup.add(Box.createHorizontalStrut(10));
@@ -133,7 +165,7 @@ public class VentanaPrincipal {
 		btnImportar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Importar curso");
+				controlador.importarCurso(); // TODO: implementar funcion/lo que haga falta
 			}
 		});
 
@@ -141,7 +173,11 @@ public class VentanaPrincipal {
 		btnAbrir.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mostrarDialogoOpciones();
+				if (usuario.getTickets() > 0) {
+					mostrarDialogoOpciones();
+					actualizarVentana();
+				} else
+					JOptionPane.showConfirmDialog(null, "No tienes suficientes vidas", ":(", JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 
@@ -173,7 +209,6 @@ public class VentanaPrincipal {
 	}
 
 	private void mostrarDialogoOpciones() {
-		// Panel personalizado
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.add(new JLabel("Elige curso a realizar:"));
@@ -185,7 +220,8 @@ public class VentanaPrincipal {
 		panel.add(Box.createVerticalStrut(3));
 
 		panel.add(new JLabel("Modo:"));
-		JComboBox<String> comboModo = new JComboBox<>(new String[] { Controlador.DEFECTO, Controlador.ALEATORIO, Controlador.CONTRARRELOJ });
+		JComboBox<String> comboModo = new JComboBox<>(
+				new String[] { Controlador.DEFECTO, Controlador.ALEATORIO, Controlador.CONTRARRELOJ });
 		panel.add(comboModo);
 
 		int resultado = JOptionPane.showConfirmDialog(null, panel, "Seleccionar Curso", JOptionPane.YES_NO_OPTION,
@@ -195,7 +231,46 @@ public class VentanaPrincipal {
 			Curso cursoSelec = (Curso) comboCursos.getSelectedItem();
 			String modoSelec = (String) comboModo.getSelectedItem();
 
-			new VentanaTest(controlador, usuario, cursoSelec, modoSelec);
+			switch (cursoSelec.getEstado()) {
+			case EN_PROCESO:
+				JOptionPane.showMessageDialog(null, "Curso ya en ejecucion", "Error", JOptionPane.WARNING_MESSAGE);
+				break;
+			case PAUSADO:
+				int option = JOptionPane.showConfirmDialog(null, "Curso pausado con " + cursoSelec.getContestadas()
+						+ " pregunta respondida de " + cursoSelec.getNumPreguntas()
+						+ "\n¿Quieres continuar desde donde lo dejaste?\nSI - Continuar desde donde lo dejaste\nNO - Comenzar de cero",
+						"Confirmación", JOptionPane.YES_NO_CANCEL_OPTION);
+				if (option == JOptionPane.YES_OPTION) {
+					controlador.continuarCurso(cursoSelec);
+					new VentanaTest(controlador, cursoSelec, modoSelec);
+				}
+				if (option == JOptionPane.NO_OPTION) {
+					controlador.reiniciarCurso(usuario, cursoSelec);
+					new VentanaTest(controlador, cursoSelec, modoSelec);
+				}
+				break;
+			case FINALIZADO:
+				int opcion = JOptionPane.showConfirmDialog(null,
+						"Curso ya completado con\n" + cursoSelec.getResultados() + "\n¿Seguro que quiere continuar?",
+						"Confirmación", JOptionPane.YES_NO_OPTION);
+				if (opcion == JOptionPane.YES_OPTION) {
+					controlador.reiniciarCurso(usuario, cursoSelec);
+					new VentanaTest(controlador, cursoSelec, modoSelec);
+				}
+				break;
+			default: // Sin iniciar
+				controlador.iniciarCurso(usuario, cursoSelec);
+				new VentanaTest(controlador, cursoSelec, modoSelec);
+				break;
+			}
 		}
+	}
+
+	public void actualizarVentana() {
+		tiempoUs.setText("Tiempo uso total: " + Integer.toString(usuario.getTiempoUso()) + " horas");
+		numeroTckt.setText(Integer.toString(usuario.getTickets()));
+
+		frame.revalidate();
+		frame.repaint();
 	}
 }

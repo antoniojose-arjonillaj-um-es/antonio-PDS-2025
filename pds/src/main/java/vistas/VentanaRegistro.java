@@ -35,6 +35,7 @@ public class VentanaRegistro {
 
 	// Constante
 	public static String DEFECTO = "/recursos/user_default.png";
+	public static double IMG = 0.33; // Proporcion de imagen
 	
 	// Atributos
 	private Controlador controlador;
@@ -211,8 +212,8 @@ public class VentanaRegistro {
 					try {
 						URL urlImagen = URI.create(imgActual).toURL();
 						ImageIcon originalIcon = new ImageIcon(urlImagen);
-						Image scaledIcon = originalIcon.getImage().getScaledInstance((int) (frame.getWidth() * 0.3),
-								(int) (frame.getHeight() * 0.3), Image.SCALE_SMOOTH);
+						Image scaledIcon = originalIcon.getImage().getScaledInstance((int) (frame.getWidth() * IMG),
+								(int) (frame.getHeight() * IMG), Image.SCALE_SMOOTH);
 						imagen.setIcon(new ImageIcon(scaledIcon));
 					} catch (MalformedURLException ex) {
 						JOptionPane.showMessageDialog(frame, "URL no válida", "Error", JOptionPane.ERROR_MESSAGE);
