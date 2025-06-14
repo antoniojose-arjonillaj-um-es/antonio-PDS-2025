@@ -1,10 +1,12 @@
 package umu.pds;
 
+import java.io.File;
 import java.util.List;
 
 import modelo.Curso;
 import modelo.Pregunta;
 import modelo.Usuario;
+import persistencia.ImportadorCursosYAML;
 import persistencia.RepoUsuarios;
 
 public class Controlador {
@@ -28,10 +30,12 @@ public class Controlador {
 	// Atributos
 	private static Controlador instancia = null;
 	private RepoUsuarios repositorio;
+	private ImportadorCursosYAML importadorYAML;
 
 	// Constructor
 	private Controlador() {
 		this.repositorio = RepoUsuarios.getInstancia();
+		this.importadorYAML = ImportadorCursosYAML.getInstancia();
 	}
 
 	// Métodos de clase
@@ -54,7 +58,7 @@ public class Controlador {
 		else
 			user = repositorio.getUsuarioPorNombre(nombreUs);
 
-		if (user !=null && user.comprobarContrasena(contraseña)) {
+		if (user != null && user.comprobarContrasena(contraseña)) {
 			user.calcularTickets();
 			user.calcularRacha();
 			return user;
@@ -75,9 +79,9 @@ public class Controlador {
 		if (repositorio.existeUsuario(Integer.parseInt(datos.get(TELF))))
 			return ERROR_TLF;
 
-		if (repositorio.getUsuarioPorNombre(datos.get(NOMB))!=null)
+		if (repositorio.getUsuarioPorNombre(datos.get(NOMB)) != null)
 			return ERROR_NAME;
-		
+
 		if (!datos.get(CONT).equals(datos.get(REPE)))
 			return ERROR_NOREPE;
 
@@ -95,8 +99,13 @@ public class Controlador {
 	 * Métodos para la gestión del curso
 	 */
 
-	public void importarCurso() {
-		// TODO: persistencia obtiene curso de archivo y lo añade a usuario
+	public boolean importarCurso(Usuario usuario, File file) throws Exception {
+		Curso curso = this.importadorYAML.importarCursosFichero(file);
+		if (curso != null) {
+			usuario.anadirCurso(curso);
+			return true;
+		} else
+			return false;
 	}
 
 	public void iniciarCurso(Usuario usuario, Curso curso) {

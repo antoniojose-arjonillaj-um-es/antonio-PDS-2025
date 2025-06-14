@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.net.URI;
 import java.net.URL;
 
@@ -19,6 +20,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -165,7 +167,19 @@ public class VentanaPrincipal {
 		btnImportar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controlador.importarCurso(); // TODO: implementar funcion/lo que haga falta
+				try {
+					JFileChooser chooser = new JFileChooser();
+					int resultado = chooser.showOpenDialog(null);
+					if (resultado == JFileChooser.APPROVE_OPTION) {
+					    File file = chooser.getSelectedFile();
+					    if(controlador.importarCurso(usuario, file))
+					    	JOptionPane.showConfirmDialog(null, "Curso importado correctamente", ":D", JOptionPane.PLAIN_MESSAGE);
+					    else
+					    	JOptionPane.showConfirmDialog(null, "Error al importar el curso", "<]87", JOptionPane.PLAIN_MESSAGE);
+					}
+				} catch (Exception error) {
+					error.printStackTrace();
+				}
 			}
 		});
 

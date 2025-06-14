@@ -1,0 +1,21 @@
+nombre: Inglés A1
+estado: sin_empezar
+correcciones: []
+contestadas: 0
+preguntas:
+  - tipo: Test
+    pregunta: "¿Cuál es la capital de UK?"
+    opciones:
+      - Londres
+      - Manchester
+      - Liverpool
+    respuestas: [0]
+
+  - tipo: Traduccion
+    pregunta: "Hello"
+    respuesta: "Hola"
+
+  - tipo: Relleno
+    pregunta: "El perro ___ en el jardín."
+    segundaPreg: "¿Dónde estaba el perro?"
+    respuesta: "jugaba"

@@ -193,6 +193,10 @@ public class Usuario {
 		tiempoUso += duracion.toHoursPart();
 		return tiempoUso;
 	}
+	
+	public void anadirCurso(Curso curso) {
+		cursos.add(curso);
+	}
 
 	public boolean hayCursosActivos() {
 		return cursos.stream().anyMatch(curso -> curso.getEstado() == Estado.EN_PROCESO);
