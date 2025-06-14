@@ -1,18 +1,17 @@
 package modelo;
 
-public class Relleno extends Pregunta{
+public class Relleno extends Pregunta {
 	// Atributo
 	public String segundaPreg;
 	public String respuesta;
-	
+
 	// Constructor
 	public Relleno(String preg, String seg, String resp) {
 		super(preg);
-		this.segundaPreg=seg;
-		this.respuesta=resp;
+		this.segundaPreg = seg;
+		this.respuesta = resp;
 	}
 
-	
 	// Getters
 	public String getSegundaPreg() {
 		return segundaPreg;

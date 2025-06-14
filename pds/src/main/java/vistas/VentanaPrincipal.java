@@ -7,6 +7,10 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.URI;
 import java.net.URL;
 
@@ -30,6 +34,7 @@ public class VentanaPrincipal {
 	// Constante
 	private static final double PROPORCION_IMG = 0.27;
 	private static final int ICONO = 30;
+	private static final double FRAME_SIZE = 0.5;
 
 	// Atributos
 	private Usuario usuario;
@@ -46,10 +51,22 @@ public class VentanaPrincipal {
 
 		// Crear el marco principal
 		frame = new JFrame("Copialingo - Principal");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // TODO: Editar en futuro
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setSize((int) (screenSize.width * 0.5), (int) (screenSize.height * 0.5));
+		frame.setSize((int) (screenSize.width * FRAME_SIZE), (int) (screenSize.height * FRAME_SIZE));
 		frame.setMinimumSize(new Dimension(550, 300));
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (controlador.logout(usuario))
+					frame.dispose();
+				else {
+					JOptionPane.showConfirmDialog(null,
+							"ERROR: CURSOS ABIERTOS\nCierra el/los cursos abiertos antes de hacer logout", "-_-",
+							JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
 
 		// Establecemos el panel contenedor
 		JPanel contentPane = new JPanel();
@@ -59,10 +76,22 @@ public class VentanaPrincipal {
 
 		// Componentes de ventana
 		JLabel imagenUs = new JLabel("");
+		imagenUs.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					String nuevaUrl = JOptionPane.showInputDialog(frame, "Introduce la URL de la imagen:");
+					if (nuevaUrl != null) {
+						controlador.cambiarImagen(usuario, nuevaUrl);
+						cargarImagen(imagenUs);
+					}
+				}
+			}
+		});
 		cargarImagen(imagenUs);
 
 		JLabel nombreUs = new JLabel(usuario.getNombreUs());
-		tiempoUs = new JLabel("Tiempo uso total: " + Integer.toString(usuario.getTiempoUso()));
+		tiempoUs = new JLabel("Tiempo uso total: " + Integer.toString(usuario.getTiempoUso()) + " horas");
 
 		JLabel imagenTckt = new JLabel("");
 		ImageIcon originalIcon = new ImageIcon(getClass().getResource("/recursos/entradas.png"));
@@ -136,7 +165,7 @@ public class VentanaPrincipal {
 		btnImportar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Importar curso");
+				controlador.importarCurso(); // TODO: implementar funcion/lo que haga falta
 			}
 		});
 
@@ -201,52 +230,46 @@ public class VentanaPrincipal {
 		if (resultado == JOptionPane.YES_OPTION) {
 			Curso cursoSelec = (Curso) comboCursos.getSelectedItem();
 			String modoSelec = (String) comboModo.getSelectedItem();
-			
-			switch(cursoSelec.getEstado()) {
-				case EN_PROCESO:
-					JOptionPane.showMessageDialog(null, "Curso ya en ejecucion", "Error", JOptionPane.WARNING_MESSAGE);
-					break;
-				case PAUSADO:
-					int option = JOptionPane.showConfirmDialog(
-						    null,
-						    "Curso pausado con "+ cursoSelec.getContestadas() + " pregunta respondida de " + cursoSelec.getNumPreguntas() + 
-						    "\n¿Quieres continuar desde donde lo dejaste?\nSI - Continuar desde donde lo dejaste\nNO - Comenzar de cero",
-						    "Confirmación",
-						    JOptionPane.YES_NO_CANCEL_OPTION
-						);
-					if(option == JOptionPane.YES_OPTION) {
-						controlador.continuarCurso(cursoSelec);
-						new VentanaTest(controlador, cursoSelec, modoSelec);
-					}
-					if(option == JOptionPane.NO_OPTION) {
-						controlador.reiniciarCurso(usuario, cursoSelec);
-						new VentanaTest(controlador, cursoSelec, modoSelec);
-					}
-					break;
-				case FINALIZADO:
-					int opcion = JOptionPane.showConfirmDialog(
-						    null,
-						    "Curso ya completado con\n"+cursoSelec.getResultados()+"\n¿Seguro que quiere continuar?",
-						    "Confirmación",
-						    JOptionPane.YES_NO_OPTION
-						);
-					if (opcion == JOptionPane.YES_OPTION) {
-						controlador.reiniciarCurso(usuario, cursoSelec);
-						new VentanaTest(controlador, cursoSelec, modoSelec);
-					}
-					break;
-				default: // Sin iniciar
-					controlador.iniciarCurso(usuario, cursoSelec);
+
+			switch (cursoSelec.getEstado()) {
+			case EN_PROCESO:
+				JOptionPane.showMessageDialog(null, "Curso ya en ejecucion", "Error", JOptionPane.WARNING_MESSAGE);
+				break;
+			case PAUSADO:
+				int option = JOptionPane.showConfirmDialog(null, "Curso pausado con " + cursoSelec.getContestadas()
+						+ " pregunta respondida de " + cursoSelec.getNumPreguntas()
+						+ "\n¿Quieres continuar desde donde lo dejaste?\nSI - Continuar desde donde lo dejaste\nNO - Comenzar de cero",
+						"Confirmación", JOptionPane.YES_NO_CANCEL_OPTION);
+				if (option == JOptionPane.YES_OPTION) {
+					controlador.continuarCurso(cursoSelec);
 					new VentanaTest(controlador, cursoSelec, modoSelec);
-					break;
+				}
+				if (option == JOptionPane.NO_OPTION) {
+					controlador.reiniciarCurso(usuario, cursoSelec);
+					new VentanaTest(controlador, cursoSelec, modoSelec);
+				}
+				break;
+			case FINALIZADO:
+				int opcion = JOptionPane.showConfirmDialog(null,
+						"Curso ya completado con\n" + cursoSelec.getResultados() + "\n¿Seguro que quiere continuar?",
+						"Confirmación", JOptionPane.YES_NO_OPTION);
+				if (opcion == JOptionPane.YES_OPTION) {
+					controlador.reiniciarCurso(usuario, cursoSelec);
+					new VentanaTest(controlador, cursoSelec, modoSelec);
+				}
+				break;
+			default: // Sin iniciar
+				controlador.iniciarCurso(usuario, cursoSelec);
+				new VentanaTest(controlador, cursoSelec, modoSelec);
+				break;
 			}
 		}
 	}
 
 	public void actualizarVentana() {
-		tiempoUs.setText("Tiempo uso total: " + Integer.toString(usuario.getTiempoUso()));
+		tiempoUs.setText("Tiempo uso total: " + Integer.toString(usuario.getTiempoUso()) + " horas");
 		numeroTckt.setText(Integer.toString(usuario.getTickets()));
-		
+
 		frame.revalidate();
 		frame.repaint();
 	}

@@ -11,7 +11,6 @@ import modelo.Relleno;
 import modelo.Test;
 import modelo.Traduccion;
 import modelo.Usuario;
-import vistas.VentanaLogin;
 import vistas.VentanaPrincipal;
 
 public class Lanzador {

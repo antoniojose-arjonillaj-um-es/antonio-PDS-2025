@@ -6,16 +6,10 @@ import modelo.Curso;
 import modelo.Pregunta;
 import modelo.Usuario;
 
-/**
- * Hello world!
- *
- */
-public class Controlador 
-{
-	
-	
+public class Controlador {
+
 	// Variables globales
-    public static final int ACIERTO = 0;
+	public static final int ACIERTO = 0;
 	public static final int ERROR_TLF = 1;
 	public static final int ERROR_NOREPE = 2;
 
@@ -28,48 +22,74 @@ public class Controlador
 	public static final String DEFECTO = "Defecto";
 	public static final String ALEATORIO = "Aleatorio";
 	public static final String CONTRARRELOJ = "Contrarreloj";
-	
-	
+
 	// Atributos
 	private static Controlador instancia = null;
-	
+
 	// Constructor
 	public Controlador() {
 	}
-	
+
 	// Métodos de clase
 	public static Controlador getInstancia() {
-		if(instancia==null) 
+		if (instancia == null)
 			instancia = new Controlador();
 		return instancia;
 	}
 
-	public Usuario aceptarLogin(String nombreUs, String contraseña) {
-		// TODO: Crear método en repositorio
-		Usuario user=null;// = repositorioUs.getUsuario(nombreUs);
-		if(user.comprobarContrasena(contraseña))
+	/*
+	 * Métodos gestión de usuario
+	 */
+
+	public Usuario login(String nombreUs, String contraseña) {
+		Usuario user = null;// TODO: persistencia obtiene usuario
+		if (user.comprobarContrasena(contraseña)) {
+			user.calcularRacha();
+			user.calcularTickets();
 			return user;
+		}
 		return null;
 	}
 
+	public boolean logout(Usuario usuario) {
+		if (usuario.hayCursosActivos())
+			return false;
+		usuario.actualizarTiempoUso();
+		// TODO: persistencia guarda usuario y sus cursos importados
+		return true;
+	}
+
 	public int registrarUsuario(List<String> datos) {
-		// TODO: Crear método en repositorio
+		// TODO: persistencia recupera lista de usuarios
 //		if(repositorioUs.existeUsuario(Integer.parseInt(datos.get(TELF))))
 //			return ERROR_TLF;
-		
-		if(!datos.get(CONT).equals(datos.get(REPE)))
+
+		if (!datos.get(CONT).equals(datos.get(REPE)))
 			return ERROR_NOREPE;
-		
-		Usuario user = new Usuario(datos.get(NOMB), datos.get(CONT), datos.get(IMAG), Integer.parseInt(datos.get(TELF)));
-		//TODO: Guardar en repositorio y en persistencia
+
+		Usuario user = new Usuario(datos.get(NOMB), datos.get(CONT), datos.get(IMAG),
+				Integer.parseInt(datos.get(TELF)));
+		// TODO: persistencia registra usuario
 		return ACIERTO;
+	}
+
+	public void cambiarImagen(Usuario usuario, String nuevaUrl) {
+		usuario.setImagen(nuevaUrl);
+	}
+
+	/*
+	 * Métodos para la gestión del curso
+	 */
+
+	public void importarCurso() {
+		// TODO: persistencia obtiene curso de archivo y lo añade a usuario
 	}
 
 	public void iniciarCurso(Usuario usuario, Curso curso) {
 		usuario.comenzarCurso();
 		curso.iniciar();
 	}
-	
+
 	public String terminarCurso(Curso curso) {
 		return curso.terminar();
 	}
@@ -78,18 +98,16 @@ public class Controlador
 		curso.reiniciarCurso();
 		iniciarCurso(usuario, curso);
 	}
-	
+
 	public void continuarCurso(Curso curso) {
 		curso.iniciar();
 	}
-	
+
 	public void pausarCurso(Curso curso) {
 		curso.pausar();
 	}
-	
+
 	public void corregirPregunta(Curso curso, Pregunta pregunta, String respuesta) {
 		curso.corregirPregunta(pregunta, respuesta);
 	}
-
-	
 }

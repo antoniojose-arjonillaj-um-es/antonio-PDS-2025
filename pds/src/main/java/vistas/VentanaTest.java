@@ -2,7 +2,9 @@ package vistas;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -31,11 +33,13 @@ import modelo.Traduccion;
 import umu.pds.Controlador;
 
 public class VentanaTest {
+	// Constantes de clase
+	private static final double FRAME_SIZE = 0.35;
+
 	// Atributos generales
 	private Controlador controlador;
 	private Curso curso;
 	private String modalidad;
-	private int indiceActual;
 
 	// Atributos visibles
 	private JFrame frame;
@@ -49,6 +53,8 @@ public class VentanaTest {
 
 	// Atributos para modalidades
 	private List<Pregunta> preguntas; // Lista de preguntas real, según modalidad
+	private int indiceActual;
+	// Atributos para contrarreloj
 	private Timer temporizador;
 	private JLabel lblTemporizador;
 	private int segRestantes;
@@ -66,8 +72,9 @@ public class VentanaTest {
 		// Inicializamos frame principal
 		frame = new JFrame();
 		frame.setTitle("Test de curso de " + curso.getNombre());
-		frame.setSize(500, 300);
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setSize((int) (screenSize.width * FRAME_SIZE), (int) (screenSize.height * FRAME_SIZE));
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -75,6 +82,7 @@ public class VentanaTest {
 					temporizador.stop();
 				}
 				controlador.pausarCurso(curso);
+				frame.dispose();
 			}
 		});
 
@@ -107,7 +115,7 @@ public class VentanaTest {
 		lblTemporizador.setVisible(false); // Por defecto oculto, sólo se muestra en contrarreloj
 
 		// Preparamos curso según modalidad escogida
-		// Aqui incluimos comportamiento general de futuros modos
+		// Aqui incluimos comportamiento general de futuros modos si es necesario
 		switch (modalidad) {
 		case Controlador.ALEATORIO:
 			frame.setTitle(frame.getTitle() + "- Modalidad aleatoria");
@@ -146,7 +154,6 @@ public class VentanaTest {
 
 		} else {
 			JOptionPane.showMessageDialog(null, "Tipo de pregunta no soportada", "Error", JOptionPane.WARNING_MESSAGE);
-
 		}
 
 		// Pegamos la caja vertical al centro verticalmente usando glue
@@ -213,7 +220,10 @@ public class VentanaTest {
 		box.add(txtActual);
 	}
 
-	private void iniciarTemporizador() {
+	private void reiniciarTemporizador() {
+		if (temporizador != null && temporizador.isRunning()) {
+			temporizador.stop();
+		}
 		segRestantes = 10;
 		lblTemporizador.setVisible(true);
 		actualizarEtiquetaTemporizador();
@@ -232,15 +242,6 @@ public class VentanaTest {
 			}
 		});
 		temporizador.start();
-	}
-
-	private void reiniciarTemporizador() {
-		if (modalidad.equals(Controlador.CONTRARRELOJ)) {
-			if (temporizador != null && temporizador.isRunning()) {
-				temporizador.stop();
-			}
-			iniciarTemporizador();
-		}
 	}
 
 	private void actualizarEtiquetaTemporizador() {
@@ -271,7 +272,7 @@ public class VentanaTest {
 				}
 			}
 			respuestaUsuario = String.join(",", seleccionadas);
-		} else if ((preguntaActual instanceof Traduccion || preguntaActual instanceof Relleno) && txtActual != null) {
+		} else if (txtActual != null && (preguntaActual instanceof Traduccion || preguntaActual instanceof Relleno)) {
 			respuestaUsuario = txtActual.getText().trim();
 		}
 		controlador.corregirPregunta(curso, preguntaActual, respuestaUsuario);

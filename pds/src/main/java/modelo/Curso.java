@@ -10,7 +10,7 @@ public class Curso {
 	private String nombre; // Nombre curso
 	private List<Pregunta> preguntas; // Lista de preguntas
 	private List<Boolean> correcciones; // Estado de respuestas dadas
-	private int contestadas; // Ultima pregunta consultada
+	private int contestadas; // Número preguntas contestadas
 	private Estado estado; // Estado del curso
 
 	// Constructor
@@ -35,7 +35,7 @@ public class Curso {
 		return preguntas.size();
 	}
 
-	public List<Boolean> getCorreccion() {
+	public List<Boolean> getCorrecciones() {
 		return correcciones;
 	}
 
@@ -50,7 +50,7 @@ public class Curso {
 	public int getCorrectas() {
 		int correctas = 0;
 		for (Boolean resultado : correcciones) {
-			if (resultado !=null && resultado) {
+			if (resultado != null && resultado) {
 				correctas++;
 			}
 		}
@@ -60,15 +60,15 @@ public class Curso {
 	public int getIncorrectas() {
 		int incorrectas = 0;
 		for (Boolean resultado : correcciones) {
-			if (!resultado && resultado != null) {
+			if (!resultado || resultado == null) {
 				incorrectas++;
 			}
 		}
 		return incorrectas;
 	}
-	
+
 	public String getResultados() {
-		return "Correctas: "+getCorrectas()+"\nIncorrectas: "+getIncorrectas();
+		return "Correctas: " + getCorrectas() + "\nIncorrectas: " + getIncorrectas();
 	}
 
 	// Setters
@@ -83,9 +83,9 @@ public class Curso {
 	public void setCorrecciones(List<Boolean> correcciones) {
 		this.correcciones = correcciones;
 	}
-	
+
 	public void setContestadas(int contestadas) {
-		this.contestadas=contestadas;
+		this.contestadas = contestadas;
 	}
 
 	public void setEstado(Estado estado) {
@@ -96,15 +96,14 @@ public class Curso {
 	public void iniciar() {
 		setEstado(Estado.EN_PROCESO);
 	}
-	
 
 	public void pausar() {
-		setEstado(Estado.PAUSADO);	
+		setEstado(Estado.PAUSADO);
 	}
-	
+
 	public String terminar() {
 		setEstado(Estado.FINALIZADO);
-		return "Resultados:\n"+getResultados();
+		return "Resultados:\n" + getResultados();
 	}
 
 	// Retorna preguntas sin responder
@@ -116,15 +115,15 @@ public class Curso {
 		}
 		return copia;
 	}
-	
+
 	public void corregirPregunta(Pregunta pregunta, String respuesta) {
 		boolean resultado = pregunta.corregir(respuesta);
-		int indice = IntStream.range(0, preguntas.size())
-			    .filter(i -> preguntas.get(i).equals(pregunta))
-			    .findFirst()
-			    .orElse(-1);
-		correcciones.set(indice, resultado);
-		contestadas++;
+		int indice = IntStream.range(0, preguntas.size()).filter(i -> preguntas.get(i).equals(pregunta)).findFirst()
+				.orElse(-1);
+		if (indice != -1) {
+			correcciones.set(indice, resultado);
+			contestadas++;
+		}
 	}
 
 	public void reiniciarCurso() {

@@ -28,6 +28,10 @@ import umu.pds.Controlador;
 
 public class VentanaLogin {
 	
+	// Constantes de clase
+	private static int DEFECTO = 0;
+	private static int LOGO = 225;
+	
 	// Atributos
 	private Controlador controlador;
 	private static JTextField txtUsuario;
@@ -71,7 +75,7 @@ public class VentanaLogin {
 		gbc_lblImagen.gridy = 0;
 		gbc_lblImagen.gridwidth = 3;
 		ImageIcon originalIcon = new ImageIcon(VentanaRegistro.class.getResource("/recursos/Copialingo.png"));
-		Image scaledImage = originalIcon.getImage().getScaledInstance(225, 225, Image.SCALE_SMOOTH);
+		Image scaledImage = originalIcon.getImage().getScaledInstance(LOGO, LOGO, Image.SCALE_SMOOTH);
 		lblImagen.setIcon(new ImageIcon(scaledImage));
 		panelPrincipal.add(lblImagen, gbc_lblImagen);
 
@@ -133,7 +137,7 @@ public class VentanaLogin {
 		btnCancelar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				System.exit(DEFECTO);
 			}
 		});
 
@@ -147,7 +151,7 @@ public class VentanaLogin {
 				String nombreUs = new String(txtUsuario.getText());
 				String contraseña = new String(txtContraseña.getPassword());
 				
-				if ((usuario = controlador.aceptarLogin(nombreUs, contraseña)) != null) {
+				if ((usuario = controlador.login(nombreUs, contraseña)) != null) {
 					new VentanaPrincipal(controlador, usuario);
 					frame.dispose();
 				} else {

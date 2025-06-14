@@ -4,19 +4,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Test extends Pregunta{
+public class Test extends Pregunta {
 
 	// Atributo
 	private List<Integer> respuestas;
 	private List<String> opciones;
-	
+
 	// Constructor
 	public Test(String preg, List<String> opc, List<Integer> resp) {
 		super(preg);
-		this.opciones=opc;
-		this.respuestas=resp;
+		this.opciones = opc;
+		this.respuestas = resp;
 	}
-	
+
 	// Getters
 	public List<Integer> getRespuesta() {
 		return respuestas;
@@ -38,15 +38,13 @@ public class Test extends Pregunta{
 	// Métodos de clase
 	@Override
 	public boolean corregir(String dato) {
-		if (dato.isEmpty() || dato==null)
+		if (dato.isEmpty() || dato == null)
 			return false;
-		List<Integer> numeros = Arrays.stream(dato.split(","))
-                					  .map(Integer::parseInt)
-                					  .collect(Collectors.toList());
-		if(numeros.size()!=respuestas.size())
+		List<Integer> numeros = Arrays.stream(dato.split(",")).map(Integer::parseInt).collect(Collectors.toList());
+		if (numeros.size() != respuestas.size())
 			return false;
 		for (Integer respuesta : numeros) {
-			if(!respuestas.contains(respuesta))
+			if (!respuestas.contains(respuesta))
 				return false;
 		}
 		return true;

@@ -3,8 +3,9 @@ package modelo;
 public abstract class Pregunta {
 	// Atributos
 	private String pregunta;
-		// Constructor
-	public Pregunta (String preg) {
+
+	// Constructor
+	public Pregunta(String preg) {
 		this.pregunta = preg;
 	}
 
@@ -17,7 +18,7 @@ public abstract class Pregunta {
 	public void setPregutna(String preg) {
 		this.pregunta = preg;
 	}
-	
+
 	// Métodos de clase
 	public abstract boolean corregir(String dato);
 }
