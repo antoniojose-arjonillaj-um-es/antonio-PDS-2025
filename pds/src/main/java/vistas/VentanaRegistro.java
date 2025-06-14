@@ -262,6 +262,9 @@ public class VentanaRegistro {
 						txtContrasena.setText("");
 						txtRepetir.setText("");
 						break;
+					case Controlador.ERROR_NAME:
+						JOptionPane.showMessageDialog(frame, "Nombre de usuario ya registrado", "Error",JOptionPane.WARNING_MESSAGE);
+						txtNombre.setText("");
 					default:
 						// Error desconocido
 						JOptionPane.showMessageDialog(frame, "Error desconocido", "Error", JOptionPane.ERROR_MESSAGE);

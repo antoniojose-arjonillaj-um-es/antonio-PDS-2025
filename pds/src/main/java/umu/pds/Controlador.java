@@ -5,6 +5,7 @@ import java.util.List;
 import modelo.Curso;
 import modelo.Pregunta;
 import modelo.Usuario;
+import persistencia.RepoUsuarios;
 
 public class Controlador {
 
@@ -12,6 +13,7 @@ public class Controlador {
 	public static final int ACIERTO = 0;
 	public static final int ERROR_TLF = 1;
 	public static final int ERROR_NOREPE = 2;
+	public static final int ERROR_NAME = 3;
 
 	public static final int NOMB = 0;
 	public static final int TELF = 1;
@@ -25,9 +27,11 @@ public class Controlador {
 
 	// Atributos
 	private static Controlador instancia = null;
+	private RepoUsuarios repositorio;
 
 	// Constructor
 	private Controlador() {
+		this.repositorio = RepoUsuarios.getInstancia();
 	}
 
 	// Métodos de clase
@@ -42,10 +46,17 @@ public class Controlador {
 	 */
 
 	public Usuario login(String nombreUs, String contraseña) {
-		Usuario user = null;// TODO: persistencia obtiene usuario
-		if (user.comprobarContrasena(contraseña)) {
-			user.calcularRacha();
+		Usuario user;
+		// Si nos pasan un teléfono
+		if (nombreUs.matches("\\d+"))
+			user = repositorio.getUsuarioPorTelefono(Integer.parseInt(nombreUs));
+		// Si nos pasan un nombre de usuario
+		else
+			user = repositorio.getUsuarioPorNombre(nombreUs);
+
+		if (user !=null && user.comprobarContrasena(contraseña)) {
 			user.calcularTickets();
+			user.calcularRacha();
 			return user;
 		}
 		return null;
@@ -55,21 +66,24 @@ public class Controlador {
 		if (usuario.hayCursosActivos())
 			return false;
 		usuario.actualizarTiempoUso();
-		// TODO: persistencia guarda usuario y sus cursos importados
+		repositorio.guardarUsuario(usuario);
+		repositorio.cerrar();
 		return true;
 	}
 
 	public int registrarUsuario(List<String> datos) {
-		// TODO: persistencia recupera lista de usuarios
-//		if(repositorioUs.existeUsuario(Integer.parseInt(datos.get(TELF))))
-//			return ERROR_TLF;
+		if (repositorio.existeUsuario(Integer.parseInt(datos.get(TELF))))
+			return ERROR_TLF;
 
+		if (repositorio.getUsuarioPorNombre(datos.get(NOMB))!=null)
+			return ERROR_NAME;
+		
 		if (!datos.get(CONT).equals(datos.get(REPE)))
 			return ERROR_NOREPE;
 
 		Usuario user = new Usuario(datos.get(NOMB), datos.get(CONT), datos.get(IMAG),
 				Integer.parseInt(datos.get(TELF)));
-		// TODO: persistencia registra usuario
+		repositorio.guardarUsuario(user);
 		return ACIERTO;
 	}
 

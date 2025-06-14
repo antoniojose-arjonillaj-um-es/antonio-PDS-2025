@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import jakarta.persistence.*;
 
 @Entity
-@DiscriminatorValue("Test")
 public class Test extends Pregunta {
 
 	// Atributo

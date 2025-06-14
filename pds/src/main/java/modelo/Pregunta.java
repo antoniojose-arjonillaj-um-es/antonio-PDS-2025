@@ -3,8 +3,7 @@ package modelo;
 import jakarta.persistence.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_pregunta")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Pregunta {
 	
 	// Atributos

@@ -5,7 +5,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Usuario {
@@ -15,15 +20,16 @@ public class Usuario {
 	private static final double INTERVALO = 2.4; // Intervalo mínimo para adquirir ticket (horas)
 
 	// Atributos
-	@Id @GeneratedValue
+	@Id
+	@GeneratedValue
 	private long id;
-	
+
 	private String nombreUs;
 	private String contrasena;
 	private String imagen;
 	private int telefono;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Curso> cursos;
 
 	private int tickets; // Número de cursos que se pueden hacer al día
@@ -35,6 +41,8 @@ public class Usuario {
 	private LocalDateTime inicioSes; // Fecha inicio sesión actual
 
 	// Constructor
+	public Usuario() {}
+	
 	public Usuario(String nombreUs, String contrasena, String imagen, int telefono) {
 		this.nombreUs = nombreUs;
 		this.contrasena = contrasena;
@@ -153,6 +161,9 @@ public class Usuario {
 	}
 
 	public int calcularTickets() {
+		this.inicioSes=LocalDateTime.now();
+		if(ultimaSes==null)
+			return MAX_TICKETS;
 		Duration duracion = Duration.between(ultimaSes, inicioSes);
 		int posibles = (int) (duracion.toHours() / INTERVALO);
 		if (posibles >= MAX_TICKETS)
@@ -162,6 +173,8 @@ public class Usuario {
 	}
 
 	public int calcularRacha() {
+		if(ultimaSes==null)
+			return 0;
 		Duration duracion = Duration.between(ultimaSes, inicioSes);
 		int horas = duracion.toHoursPart();
 		if (horas >= 24 && horas < 48) {
