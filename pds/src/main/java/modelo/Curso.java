@@ -36,8 +36,9 @@ public class Curso {
 	private Estado estado; // Estado del curso
 
 	// Constructor
-	public Curso(){}
-	
+	public Curso() {
+	}
+
 	public Curso(String nombre, List<Pregunta> preguntas) {
 		this.nombre = nombre;
 		this.preguntas = preguntas;
@@ -133,9 +134,15 @@ public class Curso {
 	// Retorna preguntas sin responder
 	public List<Pregunta> getPreguntasVacias() {
 		List<Pregunta> copia = new ArrayList<>();
-		for (int i = 0; i < preguntas.size(); i++) {
-			if (correcciones.get(i) == null)
-				copia.add(preguntas.get(i));
+		if  (correcciones != null && !correcciones.isEmpty()) {
+			for (int i = 0; i < preguntas.size(); i++) {
+				if (correcciones.get(i) == null)
+					copia.add(preguntas.get(i));
+			}
+		}
+		else {
+			this.correcciones = new ArrayList<>(Collections.nCopies(preguntas.size(), null));
+			copia=new ArrayList<>(preguntas);
 		}
 		return copia;
 	}
