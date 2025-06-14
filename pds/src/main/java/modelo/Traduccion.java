@@ -1,6 +1,11 @@
 package modelo;
 
+import jakarta.persistence.*;
+
+@Entity
+@DiscriminatorValue("Traduccion")
 public class Traduccion extends Pregunta {
+
 	// Atributos
 	private String respuesta;
 

@@ -1,5 +1,9 @@
 package modelo;
 
+import jakarta.persistence.*;
+
+@Entity
+@DiscriminatorValue("Relleno")
 public class Relleno extends Pregunta {
 	// Atributo
 	public String segundaPreg;

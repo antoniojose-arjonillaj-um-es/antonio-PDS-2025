@@ -4,10 +4,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.*;
+
+@Entity
+@DiscriminatorValue("Test")
 public class Test extends Pregunta {
 
 	// Atributo
+	@ElementCollection
 	private List<Integer> respuestas;
+
+	@ElementCollection
 	private List<String> opciones;
 
 	// Constructor

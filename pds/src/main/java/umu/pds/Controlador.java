@@ -27,7 +27,7 @@ public class Controlador {
 	private static Controlador instancia = null;
 
 	// Constructor
-	public Controlador() {
+	private Controlador() {
 	}
 
 	// Métodos de clase

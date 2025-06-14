@@ -1,7 +1,16 @@
 package modelo;
 
+import jakarta.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_pregunta")
 public abstract class Pregunta {
+	
 	// Atributos
+	@Id @GeneratedValue
+	private Long id;
+
 	private String pregunta;
 
 	// Constructor

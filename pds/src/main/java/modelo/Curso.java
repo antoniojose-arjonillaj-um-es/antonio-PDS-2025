@@ -5,12 +5,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import jakarta.persistence.*;
+
 public class Curso {
 	// Atributos
+	@Id @GeneratedValue
+	private Long id;
+
 	private String nombre; // Nombre curso
+
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Pregunta> preguntas; // Lista de preguntas
+
+	@ElementCollection
 	private List<Boolean> correcciones; // Estado de respuestas dadas
+
 	private int contestadas; // Número preguntas contestadas
+
+	@Enumerated(EnumType.STRING)
 	private Estado estado; // Estado del curso
 
 	// Constructor
