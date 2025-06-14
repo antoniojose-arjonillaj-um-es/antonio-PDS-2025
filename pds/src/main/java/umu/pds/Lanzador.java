@@ -11,6 +11,7 @@ import modelo.Relleno;
 import modelo.Test;
 import modelo.Traduccion;
 import modelo.Usuario;
+import vistas.VentanaLogin;
 import vistas.VentanaPrincipal;
 
 public class Lanzador {
@@ -20,16 +21,16 @@ public class Lanzador {
 			@Override
 			public void run() {
 				Controlador controlador = Controlador.getInstancia();
-//				new VentanaLogin(controlador);
-				placeholder(controlador);
+				new VentanaLogin(controlador);
+//				placeholder(controlador);
 			}
 		});
 	}
-	
+
 	public static void placeholder(Controlador c) {
 		Usuario user = new Usuario("antonio", "",
 				"https://www.eldiasegovia.es/media/IMG/2019/95AD3DCE-A543-813D-2367FD44E4DBBB0D.JPG", 0);
-		
+
 		Pregunta preguntaT = new Traduccion("PreguntaTraduccion", "respuesta");
 		Pregunta preguntaR = new Relleno("PrimeraParte", "SegundaParte", "respuesta");
 		Pregunta pregunta = new Test("Pregunta", List.of("Primera", "Segunda", "Tercera"), List.of(0));
@@ -37,7 +38,7 @@ public class Lanzador {
 		lp.add(preguntaT);
 		lp.add(preguntaR);
 		lp.add(pregunta);
-		
+
 		List<Curso> lista = new ArrayList<Curso>();
 		Curso prim = new Curso("Ingles", lp);
 		lista.add(prim);

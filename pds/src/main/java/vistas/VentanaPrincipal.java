@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.net.URI;
 import java.net.URL;
 
@@ -19,6 +20,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -165,7 +167,19 @@ public class VentanaPrincipal {
 		btnImportar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controlador.importarCurso(); // TODO: implementar funcion/lo que haga falta
+				try {
+					JFileChooser chooser = new JFileChooser();
+					int resultado = chooser.showOpenDialog(null);
+					if (resultado == JFileChooser.APPROVE_OPTION) {
+					    File file = chooser.getSelectedFile();
+					    if(controlador.importarCurso(usuario, file))
+					    	JOptionPane.showConfirmDialog(null, "Curso importado correctamente", ":D", JOptionPane.PLAIN_MESSAGE);
+					    else
+					    	JOptionPane.showConfirmDialog(null, "Error al importar el curso", "<]87", JOptionPane.PLAIN_MESSAGE);
+					}
+				} catch (Exception error) {
+					error.printStackTrace();
+				}
 			}
 		});
 
@@ -230,38 +244,44 @@ public class VentanaPrincipal {
 		if (resultado == JOptionPane.YES_OPTION) {
 			Curso cursoSelec = (Curso) comboCursos.getSelectedItem();
 			String modoSelec = (String) comboModo.getSelectedItem();
-
-			switch (cursoSelec.getEstado()) {
-			case EN_PROCESO:
-				JOptionPane.showMessageDialog(null, "Curso ya en ejecucion", "Error", JOptionPane.WARNING_MESSAGE);
-				break;
-			case PAUSADO:
-				int option = JOptionPane.showConfirmDialog(null, "Curso pausado con " + cursoSelec.getContestadas()
-						+ " pregunta respondida de " + cursoSelec.getNumPreguntas()
-						+ "\n¿Quieres continuar desde donde lo dejaste?\nSI - Continuar desde donde lo dejaste\nNO - Comenzar de cero",
-						"Confirmación", JOptionPane.YES_NO_CANCEL_OPTION);
-				if (option == JOptionPane.YES_OPTION) {
-					controlador.continuarCurso(cursoSelec);
+			if (cursoSelec != null) {
+				switch (cursoSelec.getEstado()) {
+				case EN_PROCESO:
+					JOptionPane.showMessageDialog(null, "Curso ya en ejecucion", "Error", JOptionPane.WARNING_MESSAGE);
+					break;
+				case PAUSADO:
+					int option = JOptionPane.showConfirmDialog(null, "Curso pausado con " + cursoSelec.getContestadas()
+							+ " pregunta respondida de " + cursoSelec.getNumPreguntas()
+							+ "\n¿Quieres continuar desde donde lo dejaste?\nSI - Continuar desde donde lo dejaste\nNO - Comenzar de cero",
+							"Confirmación", JOptionPane.YES_NO_CANCEL_OPTION);
+					if (option == JOptionPane.YES_OPTION) {
+						controlador.continuarCurso(cursoSelec);
+						new VentanaTest(controlador, cursoSelec, modoSelec);
+					}
+					if (option == JOptionPane.NO_OPTION) {
+						controlador.reiniciarCurso(usuario, cursoSelec);
+						new VentanaTest(controlador, cursoSelec, modoSelec);
+					}
+					break;
+				case FINALIZADO:
+					int opcion = JOptionPane
+							.showConfirmDialog(null,
+									"Curso ya completado con\n" + cursoSelec.getResultados()
+											+ "\n¿Seguro que quiere continuar?",
+									"Confirmación", JOptionPane.YES_NO_OPTION);
+					if (opcion == JOptionPane.YES_OPTION) {
+						controlador.reiniciarCurso(usuario, cursoSelec);
+						new VentanaTest(controlador, cursoSelec, modoSelec);
+					}
+					break;
+				default: // Sin iniciar
+					controlador.iniciarCurso(usuario, cursoSelec);
 					new VentanaTest(controlador, cursoSelec, modoSelec);
+					break;
 				}
-				if (option == JOptionPane.NO_OPTION) {
-					controlador.reiniciarCurso(usuario, cursoSelec);
-					new VentanaTest(controlador, cursoSelec, modoSelec);
-				}
-				break;
-			case FINALIZADO:
-				int opcion = JOptionPane.showConfirmDialog(null,
-						"Curso ya completado con\n" + cursoSelec.getResultados() + "\n¿Seguro que quiere continuar?",
-						"Confirmación", JOptionPane.YES_NO_OPTION);
-				if (opcion == JOptionPane.YES_OPTION) {
-					controlador.reiniciarCurso(usuario, cursoSelec);
-					new VentanaTest(controlador, cursoSelec, modoSelec);
-				}
-				break;
-			default: // Sin iniciar
-				controlador.iniciarCurso(usuario, cursoSelec);
-				new VentanaTest(controlador, cursoSelec, modoSelec);
-				break;
+			} else {
+				JOptionPane.showMessageDialog(null, "ERROR: No hay curso seleccionado\nPor favor, importa un curso",
+						"Error", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}

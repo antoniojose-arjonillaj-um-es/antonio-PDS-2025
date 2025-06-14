@@ -1,11 +1,18 @@
 package modelo;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Relleno extends Pregunta {
 	// Atributo
 	public String segundaPreg;
 	public String respuesta;
 
 	// Constructor
+	public Relleno() {
+		super("");
+	}
+
 	public Relleno(String preg, String seg, String resp) {
 		super(preg);
 		this.segundaPreg = seg;

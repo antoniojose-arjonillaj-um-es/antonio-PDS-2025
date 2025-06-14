@@ -4,13 +4,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Test extends Pregunta {
 
 	// Atributo
+	@ElementCollection
 	private List<Integer> respuestas;
+
+	@ElementCollection
 	private List<String> opciones;
 
 	// Constructor
+	public Test() {
+		super("");
+	}
+
 	public Test(String preg, List<String> opc, List<Integer> resp) {
 		super(preg);
 		this.opciones = opc;
@@ -18,7 +28,7 @@ public class Test extends Pregunta {
 	}
 
 	// Getters
-	public List<Integer> getRespuesta() {
+	public List<Integer> getRespuestas() {
 		return respuestas;
 	}
 
@@ -27,7 +37,7 @@ public class Test extends Pregunta {
 	}
 
 	// Setters
-	public void setRespuesta(List<Integer> res) {
+	public void setRespuestas(List<Integer> res) {
 		this.respuestas = res;
 	}
 

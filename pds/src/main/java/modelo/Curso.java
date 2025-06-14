@@ -5,15 +5,40 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+@Entity
 public class Curso {
 	// Atributos
+	@Id
+	@GeneratedValue
+	private Long id;
+
 	private String nombre; // Nombre curso
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Pregunta> preguntas; // Lista de preguntas
+
+	@ElementCollection
 	private List<Boolean> correcciones; // Estado de respuestas dadas
+
 	private int contestadas; // Número preguntas contestadas
+
+	@Enumerated(EnumType.STRING)
 	private Estado estado; // Estado del curso
 
 	// Constructor
+	public Curso() {
+	}
+
 	public Curso(String nombre, List<Pregunta> preguntas) {
 		this.nombre = nombre;
 		this.preguntas = preguntas;
@@ -109,9 +134,15 @@ public class Curso {
 	// Retorna preguntas sin responder
 	public List<Pregunta> getPreguntasVacias() {
 		List<Pregunta> copia = new ArrayList<>();
-		for (int i = 0; i < preguntas.size(); i++) {
-			if (correcciones.get(i) == null)
-				copia.add(preguntas.get(i));
+		if  (correcciones != null && !correcciones.isEmpty()) {
+			for (int i = 0; i < preguntas.size(); i++) {
+				if (correcciones.get(i) == null)
+					copia.add(preguntas.get(i));
+			}
+		}
+		else {
+			this.correcciones = new ArrayList<>(Collections.nCopies(preguntas.size(), null));
+			copia=new ArrayList<>(preguntas);
 		}
 		return copia;
 	}

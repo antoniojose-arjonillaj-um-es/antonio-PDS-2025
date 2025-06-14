@@ -1,10 +1,18 @@
 package modelo;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Traduccion extends Pregunta {
+
 	// Atributos
 	private String respuesta;
 
 	// Constructor
+	public Traduccion() {
+		super("");
+	}
+
 	public Traduccion(String preg, String resp) {
 		super(preg);
 		this.respuesta = resp;
