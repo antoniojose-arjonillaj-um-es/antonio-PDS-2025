@@ -133,4 +133,22 @@ public class Controlador {
 	public void corregirPregunta(Curso curso, Pregunta pregunta, String respuesta) {
 		curso.corregirPregunta(pregunta, respuesta);
 	}
+	
+	/*
+	 * Funcionalidad extra
+	 */
+	
+	public int compartirCurso(String id, Curso curso) {
+		Usuario user;
+		if (id.matches("\\d+"))
+			user = repositorio.getUsuarioPorTelefono(Integer.parseInt(id));
+		else
+			user = repositorio.getUsuarioPorNombre(id);
+		if(user==null)
+			return ERROR_NAME;
+		Curso copia = new Curso(curso.getNombre(), curso.getPreguntas());
+		user.anadirCurso(copia);
+		repositorio.guardarUsuario(user);
+		return ACIERTO;
+	}
 }
