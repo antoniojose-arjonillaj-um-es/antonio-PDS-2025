@@ -25,6 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import modelo.Curso;
@@ -106,6 +107,7 @@ public class VentanaPrincipal {
 
 		JButton btnImportar = new JButton("Importar curso");
 		JButton btnAbrir = new JButton("Abrir curso");
+		JButton btnCompartir = new JButton("Compartir curso");
 
 		// Panel para info de usuario a la izquierda
 		JPanel panelUs = new JPanel();
@@ -149,6 +151,8 @@ public class VentanaPrincipal {
 		panelBtn.add(Box.createHorizontalGlue());
 		panelBtn.add(btnImportar);
 		panelBtn.add(Box.createHorizontalStrut(10));
+		panelBtn.add(btnCompartir);
+		panelBtn.add(Box.createHorizontalStrut(10));
 		panelBtn.add(btnAbrir);
 		panelBtn.add(Box.createHorizontalGlue());
 
@@ -171,11 +175,13 @@ public class VentanaPrincipal {
 					JFileChooser chooser = new JFileChooser();
 					int resultado = chooser.showOpenDialog(null);
 					if (resultado == JFileChooser.APPROVE_OPTION) {
-					    File file = chooser.getSelectedFile();
-					    if(controlador.importarCurso(usuario, file))
-					    	JOptionPane.showConfirmDialog(null, "Curso importado correctamente", ":D", JOptionPane.PLAIN_MESSAGE);
-					    else
-					    	JOptionPane.showConfirmDialog(null, "Error al importar el curso", "<]87", JOptionPane.PLAIN_MESSAGE);
+						File file = chooser.getSelectedFile();
+						if (controlador.importarCurso(usuario, file))
+							JOptionPane.showConfirmDialog(null, "Curso importado correctamente", ":D",
+									JOptionPane.PLAIN_MESSAGE);
+						else
+							JOptionPane.showConfirmDialog(null, "Error al importar el curso", "<]87",
+									JOptionPane.PLAIN_MESSAGE);
 					}
 				} catch (Exception error) {
 					error.printStackTrace();
@@ -192,6 +198,14 @@ public class VentanaPrincipal {
 					actualizarVentana();
 				} else
 					JOptionPane.showConfirmDialog(null, "No tienes suficientes vidas", ":(", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+
+		// Evento para compartir curso
+		btnCompartir.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				compartirCurso();
 			}
 		});
 
@@ -282,6 +296,50 @@ public class VentanaPrincipal {
 			} else {
 				JOptionPane.showMessageDialog(null, "ERROR: No hay curso seleccionado\nPor favor, importa un curso",
 						"Error", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+	}
+
+	private void compartirCurso() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(new JLabel("Compartiendo curso"));
+		panel.add(Box.createVerticalStrut(3));
+
+		panel.add(new JLabel("Introduce teléfono/usuario destinantario"));
+		JTextField txtId = new JTextField();
+		panel.add(txtId);
+		panel.add(Box.createVerticalStrut(3));
+
+		panel.add(new JLabel("Elige curso que quieres enviar:"));
+		JComboBox<Curso> comboCursos = new JComboBox<>(usuario.getCursos().toArray(new Curso[0]));
+		panel.add(comboCursos);
+
+		int resultado = JOptionPane.showConfirmDialog(null, panel, "(⁄ ⁄•⁄ω⁄•⁄ ⁄)", JOptionPane.YES_NO_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
+
+		if (resultado == JOptionPane.YES_OPTION) {
+			Curso cursoSelec = (Curso) comboCursos.getSelectedItem();
+			String userSelec = txtId.getText().trim();
+
+			if (cursoSelec != null && (userSelec != null && !userSelec.isEmpty())) {
+				switch (controlador.compartirCurso(userSelec, cursoSelec)) {
+				case Controlador.ACIERTO:
+					JOptionPane.showMessageDialog(null, "Curso compartido correctamente.", "\\(＾▽＾)/ ",
+							JOptionPane.PLAIN_MESSAGE);
+					break;
+				case Controlador.ERROR_NAME:
+					JOptionPane.showMessageDialog(null, "ERROR: Usuario no encontrado en el sistema.", "((((( ;°Д°) ",
+							JOptionPane.ERROR_MESSAGE);
+					break;
+				default:
+					JOptionPane.showMessageDialog(null, "ERROR: Error desconocido.", "(?_?) ",
+							JOptionPane.ERROR_MESSAGE);
+					break;
+				}
+			} else {
+				JOptionPane.showMessageDialog(null, "ERROR: Usuario y curso no pueden estar vacíos", "(\\\\｀ﾛ´)\\\\ ",
+						JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
