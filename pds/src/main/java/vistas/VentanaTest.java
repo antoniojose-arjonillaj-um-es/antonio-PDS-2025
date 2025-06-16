@@ -176,7 +176,7 @@ public class VentanaTest {
 			mostrarPregunta();
 		} else {
 			JOptionPane.showMessageDialog(null,
-					"Fin del test - modalidad: " + modalidad + "\n" + controlador.terminarCurso(curso));
+					"Fin del test - modalidad: " + modalidad.toString() + "\n" + controlador.terminarCurso(curso));
 			btnSiguiente.setEnabled(false);
 			frame.dispose();
 		}

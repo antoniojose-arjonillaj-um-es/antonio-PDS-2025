@@ -258,7 +258,7 @@ public class VentanaPrincipal {
 		if (resultado == JOptionPane.YES_OPTION) {
 			Curso cursoSelec = (Curso) comboCursos.getSelectedItem();
 			ModoCurso modoSelec = (ModoCurso) comboModo.getSelectedItem();
-			if (cursoSelec != null) {
+			if (cursoSelec != null && modoSelec != null) {
 				switch (cursoSelec.getEstado()) {
 				case EN_PROCESO:
 					JOptionPane.showMessageDialog(null, "Curso ya en ejecucion", "Error", JOptionPane.WARNING_MESSAGE);
@@ -294,7 +294,7 @@ public class VentanaPrincipal {
 					break;
 				}
 			} else {
-				JOptionPane.showMessageDialog(null, "ERROR: No hay curso seleccionado\nPor favor, importa un curso",
+				JOptionPane.showMessageDialog(null, "ERROR: No hay curso o modo seleccionado\nPor favor,selecciona uno",
 						"Error", JOptionPane.WARNING_MESSAGE);
 			}
 		}
