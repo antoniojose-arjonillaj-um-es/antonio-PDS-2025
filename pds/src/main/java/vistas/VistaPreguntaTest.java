@@ -17,6 +17,7 @@ public class VistaPreguntaTest implements VistaPregunta {
 	}
 
 	@Override
+	
 	public void mostrar(Box contenedor) {
 		JLabel enunciado = new JLabel(pregunta.getPregunta());
 		enunciado.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -24,6 +25,7 @@ public class VistaPreguntaTest implements VistaPregunta {
 		contenedor.add(Box.createVerticalStrut(10));
 
 		List<String> opciones = pregunta.getOpciones();
+		
 		for (int i = 0; i < opciones.size(); i++) {
 			JCheckBox check = new JCheckBox(opciones.get(i));
 			check.setAlignmentX(Component.CENTER_ALIGNMENT);
