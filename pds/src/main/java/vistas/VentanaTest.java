@@ -7,7 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.Box;
@@ -24,6 +23,7 @@ import javax.swing.border.EmptyBorder;
 
 import copialingo.Controlador;
 import modelo.Curso;
+import modelo.ModoCurso;
 import modelo.Pregunta;
 
 public class VentanaTest {
@@ -33,7 +33,7 @@ public class VentanaTest {
 	// Atributos generales
 	private Controlador controlador;
 	private Curso curso;
-	private String modalidad;
+	private ModoCurso modalidad;
 
 	// Atributos visibles
 	private JFrame frame;
@@ -53,7 +53,7 @@ public class VentanaTest {
 	private int segRestantes;
 
 	// Constructor
-	public VentanaTest(Controlador controlador, Curso curso, String modalidad) {
+	public VentanaTest(Controlador controlador, Curso curso, ModoCurso modalidad) {
 
 		this.controlador = controlador;
 		this.curso = curso;
@@ -64,7 +64,7 @@ public class VentanaTest {
 
 		// Inicializamos frame principal
 		frame = new JFrame();
-		frame.setTitle("Test de curso de " + curso.getNombre());
+		frame.setTitle("Test de curso de " + curso.getNombre() + " - " + modalidad.toString());
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setSize((int) (screenSize.width * FRAME_SIZE), (int) (screenSize.height * FRAME_SIZE));
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -107,21 +107,7 @@ public class VentanaTest {
 		frame.getContentPane().add(lblTemporizador, BorderLayout.NORTH);
 		lblTemporizador.setVisible(false); // Por defecto oculto, sólo se muestra en contrarreloj
 
-		// Preparamos curso según modalidad escogida
-		// Aqui incluimos comportamiento general de futuros modos si es necesario
-		switch (modalidad) {
-		case Controlador.ALEATORIO:
-			frame.setTitle(frame.getTitle() + "- Modalidad aleatoria");
-			Collections.shuffle(preguntas); // Desordenamos preguntas
-			break;
-		case Controlador.CONTRARRELOJ:
-			frame.setTitle(frame.getTitle() + "- Modalidad contrareloj");
-			break;
-		default: // defecto
-			frame.setTitle(frame.getTitle() + "- Modalidad defecto");
-			break;
-		}
-
+		this.modalidad.prepararPreguntas(preguntas);
 		mostrarPregunta();
 
 		// Finalmente mostramos la ventana
@@ -151,7 +137,7 @@ public class VentanaTest {
 		panelCentro.revalidate();
 		panelCentro.repaint();
 
-		if (modalidad.equals(Controlador.CONTRARRELOJ))
+		if (modalidad.usaTemporizador())
 			reiniciarTemporizador();
 	}
 

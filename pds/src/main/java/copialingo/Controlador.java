@@ -4,6 +4,11 @@ import java.io.File;
 import java.util.List;
 
 import modelo.Curso;
+import modelo.ModoAleatorio;
+import modelo.ModoContrarreloj;
+import modelo.ModoContrarrelojAleatorio;
+import modelo.ModoCurso;
+import modelo.ModoDefecto;
 import modelo.Pregunta;
 import modelo.Usuario;
 import persistencia.ImportadorCursosYAML;
@@ -22,10 +27,6 @@ public class Controlador {
 	public static final int CONT = 2;
 	public static final int REPE = 3;
 	public static final int IMAG = 4;
-
-	public static final String DEFECTO = "Defecto";
-	public static final String ALEATORIO = "Aleatorio";
-	public static final String CONTRARRELOJ = "Contrarreloj";
 
 	// Atributos
 	private static Controlador instancia = null;
@@ -133,18 +134,22 @@ public class Controlador {
 	public void corregirPregunta(Curso curso, Pregunta pregunta, String respuesta) {
 		curso.corregirPregunta(pregunta, respuesta);
 	}
-	
+
+	public List<ModoCurso> obtenerModos() {
+		return List.of(new ModoDefecto(), new ModoAleatorio(), new ModoContrarreloj(), new ModoContrarrelojAleatorio());
+	}
+
 	/*
 	 * Funcionalidad extra
 	 */
-	
+
 	public int compartirCurso(String id, Curso curso) {
 		Usuario user;
 		if (id.matches("\\d+"))
 			user = repositorio.getUsuarioPorTelefono(Integer.parseInt(id));
 		else
 			user = repositorio.getUsuarioPorNombre(id);
-		if(user==null)
+		if (user == null)
 			return ERROR_NAME;
 		Curso copia = new Curso(curso.getNombre(), curso.getPreguntas());
 		user.anadirCurso(copia);
