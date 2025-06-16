@@ -28,9 +28,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import copialingo.Controlador;
 import modelo.Curso;
 import modelo.Usuario;
-import umu.pds.Controlador;
 
 public class VentanaPrincipal {
 

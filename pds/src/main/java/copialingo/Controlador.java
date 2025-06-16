@@ -1,4 +1,4 @@
-package umu.pds;
+package copialingo;
 
 import java.io.File;
 import java.util.List;

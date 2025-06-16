@@ -25,12 +25,12 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
+import copialingo.Controlador;
 import modelo.Curso;
 import modelo.Pregunta;
 import modelo.Relleno;
 import modelo.Test;
 import modelo.Traduccion;
-import umu.pds.Controlador;
 
 public class VentanaTest {
 	// Constantes de clase
