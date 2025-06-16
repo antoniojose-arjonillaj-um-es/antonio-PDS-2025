@@ -30,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 
 import copialingo.Controlador;
 import modelo.Curso;
+import modelo.ModoCurso;
 import modelo.Usuario;
 
 public class VentanaPrincipal {
@@ -248,8 +249,7 @@ public class VentanaPrincipal {
 		panel.add(Box.createVerticalStrut(3));
 
 		panel.add(new JLabel("Modo:"));
-		JComboBox<String> comboModo = new JComboBox<>(
-				new String[] { Controlador.DEFECTO, Controlador.ALEATORIO, Controlador.CONTRARRELOJ });
+		JComboBox<ModoCurso> comboModo = new JComboBox<>(controlador.obtenerModos().toArray(new ModoCurso[0]));
 		panel.add(comboModo);
 
 		int resultado = JOptionPane.showConfirmDialog(null, panel, "Seleccionar Curso", JOptionPane.YES_NO_OPTION,
@@ -257,7 +257,7 @@ public class VentanaPrincipal {
 
 		if (resultado == JOptionPane.YES_OPTION) {
 			Curso cursoSelec = (Curso) comboCursos.getSelectedItem();
-			String modoSelec = (String) comboModo.getSelectedItem();
+			ModoCurso modoSelec = (ModoCurso) comboModo.getSelectedItem();
 			if (cursoSelec != null) {
 				switch (cursoSelec.getEstado()) {
 				case EN_PROCESO:
