@@ -8,16 +8,18 @@ import java.util.List;
 import modelo.Test;
 
 public class VistaPreguntaTest implements VistaPregunta {
+	// Atributos
 	private Test pregunta;
 	private List<JCheckBox> checkBoxes;
 
+	// Constructor
 	public VistaPreguntaTest(Test pregunta) {
 		this.pregunta = pregunta;
 		this.checkBoxes = new ArrayList<>();
 	}
 
+	// Métodos de clase
 	@Override
-	
 	public void mostrar(Box contenedor) {
 		JLabel enunciado = new JLabel(pregunta.getPregunta());
 		enunciado.setAlignmentX(Component.CENTER_ALIGNMENT);

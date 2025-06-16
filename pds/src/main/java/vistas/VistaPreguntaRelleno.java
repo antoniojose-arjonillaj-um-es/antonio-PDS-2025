@@ -6,13 +6,16 @@ import java.awt.Component;
 import modelo.Relleno;
 
 public class VistaPreguntaRelleno implements VistaPregunta {
+	// Atributos
 	private Relleno pregunta;
 	private JTextField txtActual;
 
+	// Constructor
 	public VistaPreguntaRelleno(Relleno pregunta) {
 		this.pregunta = pregunta;
 	}
-
+	
+	// Métodos de clase
 	@Override
 	public void mostrar(Box contenedor) {
 		
