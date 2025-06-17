@@ -1,0 +1,38 @@
+nombre: Inglés - Básico
+estado: sin_empezar
+correcciones: []
+contestadas: 0
+preguntas:
+  - tipo: Test
+    pregunta: "¿Cuál es el plural de 'child'?"
+    opciones:
+      - childs
+      - children
+      - childrens
+    respuestas: [1]
+
+  - tipo: Test
+    pregunta: "¿Cuál es el pasado de 'go'?"
+    opciones:
+      - goed
+      - went
+      - gone
+    respuestas: [1]
+
+  - tipo: Traduccion
+    pregunta: "Good morning"
+    respuesta: "Buenos días"
+
+  - tipo: Traduccion
+    pregunta: "Thank you"
+    respuesta: "Gracias"
+
+  - tipo: Relleno
+    pregunta: "What  "
+    segundaPreg: " you doing?"
+    respuesta: "are"
+
+  - tipo: Relleno
+    pregunta: "We "
+    segundaPreg: " to the shopping center."
+    respuesta: "went"

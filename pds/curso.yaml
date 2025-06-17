@@ -1,21 +1,21 @@
-nombre: Inglés A1
+nombre: Prueba
 estado: sin_empezar
 correcciones: []
 contestadas: 0
 preguntas:
   - tipo: Test
-    pregunta: "¿Cuál es la capital de UK?"
+    pregunta: "Respuesta es la 0"
     opciones:
-      - Londres
-      - Manchester
-      - Liverpool
+      - Respuesta 0
+      - Respuesta 1
+      - Respuesta 2
     respuestas: [0]
 
   - tipo: Traduccion
-    pregunta: "Hello"
-    respuesta: "Hola"
+    pregunta: "Copia 'Respuesta'"
+    respuesta: "Respuesta"
 
   - tipo: Relleno
-    pregunta: "El perro ___ en el jardín."
-    segundaPreg: "¿Dónde estaba el perro?"
-    respuesta: "jugaba"
+    pregunta: "Espacio "
+    segundaPreg: " separado (copia 'Respuesta')"
+    respuesta: "Respuesta"

@@ -1,0 +1,38 @@
+nombre: Portugués - Básico
+estado: sin_empezar
+correcciones: []
+contestadas: 0
+preguntas:
+  - tipo: Test
+    pregunta: "¿Cuál es el plural de 'cão'?"
+    opciones:
+      - cãos
+      - cães
+      - caes
+    respuestas: [1]
+
+  - tipo: Test
+    pregunta: "¿Cuál es el pasado de 'ir' (eu)?"
+    opciones:
+      - fui
+      - ia
+      - ido
+    respuestas: [0]
+
+  - tipo: Traduccion
+    pregunta: "Bom dia"
+    respuesta: "Buenos días"
+
+  - tipo: Traduccion
+    pregunta: "Obrigado"
+    respuesta: "Gracias"
+
+  - tipo: Relleno
+    pregunta: "Você "
+    segundaPreg: " feliz hoje."
+    respuesta: "está"
+
+  - tipo: Relleno
+    pregunta: "Nós "
+    segundaPreg: " ao mercado ontem."
+    respuesta: "fomos"

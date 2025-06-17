@@ -33,7 +33,7 @@ public class Usuario {
 	private List<Curso> cursos;
 
 	private int tickets; // Número de cursos que se pueden hacer al día
-	private int tiempoUso; // Tiempo de uso de la aplicación (en horas)
+	private double tiempoUso; // Tiempo de uso de la aplicación (en horas)
 	private int mejorRacha;
 	private int rachaActual;
 
@@ -41,8 +41,9 @@ public class Usuario {
 	private LocalDateTime inicioSes; // Fecha inicio sesión actual
 
 	// Constructor
-	public Usuario() {}
-	
+	public Usuario() {
+	}
+
 	public Usuario(String nombreUs, String contrasena, String imagen, int telefono) {
 		this.nombreUs = nombreUs;
 		this.contrasena = contrasena;
@@ -87,10 +88,10 @@ public class Usuario {
 
 	// Propiedad calculada para mostrar actualizacion de horas cada
 	// vez que se hace un curso
-	public int getTiempoUso() {
-		int aux = tiempoUso;
+	public double getTiempoUso() {
+		double aux = tiempoUso;
 		Duration duracion = Duration.between(inicioSes, LocalDateTime.now());
-		aux += duracion.toHoursPart();
+		aux += duracion.toMinutes() / 60.0;
 		return aux;
 	}
 
@@ -135,7 +136,7 @@ public class Usuario {
 		this.tickets = tickets;
 	}
 
-	public void setTiempoUso(int tiempoUso) {
+	public void setTiempoUso(double tiempoUso) {
 		this.tiempoUso = tiempoUso;
 	}
 
@@ -161,8 +162,8 @@ public class Usuario {
 	}
 
 	public int calcularTickets() {
-		this.inicioSes=LocalDateTime.now();
-		if(ultimaSes==null)
+		this.inicioSes = LocalDateTime.now();
+		if (ultimaSes == null)
 			return MAX_TICKETS;
 		Duration duracion = Duration.between(ultimaSes, inicioSes);
 		int posibles = (int) (duracion.toHours() / INTERVALO);
@@ -173,7 +174,7 @@ public class Usuario {
 	}
 
 	public int calcularRacha() {
-		if(ultimaSes==null)
+		if (ultimaSes == null)
 			return 0;
 		Duration duracion = Duration.between(ultimaSes, inicioSes);
 		int horas = duracion.toHoursPart();
@@ -188,12 +189,13 @@ public class Usuario {
 		return rachaActual;
 	}
 
-	public int actualizarTiempoUso() {
+	public double actualizarTiempoUso() {
 		Duration duracion = Duration.between(inicioSes, LocalDateTime.now());
-		tiempoUso += duracion.toHoursPart();
+		double horasDecimal = duracion.toMinutes() / 60.0;
+		tiempoUso += horasDecimal;
 		return tiempoUso;
 	}
-	
+
 	public void anadirCurso(Curso curso) {
 		cursos.add(curso);
 	}
