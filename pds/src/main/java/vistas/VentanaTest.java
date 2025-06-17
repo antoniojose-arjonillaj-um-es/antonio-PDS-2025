@@ -47,6 +47,7 @@ public class VentanaTest {
 	// Atributos para modalidades
 	private List<Pregunta> preguntas; // Lista de preguntas real, según modalidad
 	private int indiceActual;
+
 	// Atributos para contrarreloj
 	private Timer temporizador;
 	private JLabel lblTemporizador;
@@ -107,7 +108,7 @@ public class VentanaTest {
 		frame.getContentPane().add(lblTemporizador, BorderLayout.NORTH);
 		lblTemporizador.setVisible(false); // Por defecto oculto, sólo se muestra en contrarreloj
 
-		this.modalidad.prepararPreguntas(preguntas);
+		controlador.prepararPreguntas(modalidad, preguntas);
 		mostrarPregunta();
 
 		// Finalmente mostramos la ventana
@@ -147,7 +148,7 @@ public class VentanaTest {
 		}
 		segRestantes = 10;
 		lblTemporizador.setVisible(true);
-		actualizarEtiquetaTemporizador();
+		lblTemporizador.setText("Tiempo restante: " + segRestantes + " s");
 
 		if (temporizador != null && temporizador.isRunning()) {
 			temporizador.stop();
@@ -155,7 +156,7 @@ public class VentanaTest {
 
 		temporizador = new Timer(1000, e -> {
 			segRestantes--;
-			actualizarEtiquetaTemporizador();
+			lblTemporizador.setText("Tiempo restante: " + segRestantes + " s");
 
 			if (segRestantes <= 0) {
 				temporizador.stop();
@@ -163,10 +164,6 @@ public class VentanaTest {
 			}
 		});
 		temporizador.start();
-	}
-
-	private void actualizarEtiquetaTemporizador() {
-		lblTemporizador.setText("Tiempo restante: " + segRestantes + " s");
 	}
 
 	private void avanzarPregunta() {
