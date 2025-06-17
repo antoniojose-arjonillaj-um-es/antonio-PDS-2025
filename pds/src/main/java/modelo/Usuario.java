@@ -1,6 +1,7 @@
 package modelo;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -161,6 +162,11 @@ public class Usuario {
 		return this.contrasena.equals(contrasena);
 	}
 
+	public void actualizarSesion() {
+		this.ultimaSes = this.inicioSes;
+		this.inicioSes = null;
+	}
+
 	public int calcularTickets() {
 		this.inicioSes = LocalDateTime.now();
 		if (ultimaSes == null)
@@ -175,17 +181,21 @@ public class Usuario {
 
 	public int calcularRacha() {
 		if (ultimaSes == null)
-			return 0;
-		Duration duracion = Duration.between(ultimaSes, inicioSes);
-		int horas = duracion.toHoursPart();
-		if (horas >= 24 && horas < 48) {
+			return INICIO;
+
+		LocalDate diaUltima = ultimaSes.toLocalDate();
+		LocalDate diaActual = inicioSes.toLocalDate();
+
+		if (diaUltima.plusDays(1).equals(diaActual)) {
 			rachaActual++;
 		} else {
 			rachaActual = 0;
 		}
+
 		if (rachaActual > mejorRacha) {
 			mejorRacha = rachaActual;
 		}
+
 		return rachaActual;
 	}
 

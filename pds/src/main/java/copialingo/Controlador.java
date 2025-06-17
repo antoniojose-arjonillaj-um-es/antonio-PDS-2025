@@ -71,6 +71,7 @@ public class Controlador {
 		if (usuario.hayCursosActivos())
 			return false;
 		usuario.actualizarTiempoUso();
+		usuario.actualizarSesion();
 		repositorio.guardarUsuario(usuario);
 		repositorio.cerrar();
 		return true;
@@ -99,7 +100,7 @@ public class Controlador {
 	/*
 	 * Métodos para la gestión del curso
 	 */
-
+	
 	public boolean importarCurso(Usuario usuario, File file) throws Exception {
 		Curso curso = this.importadorYAML.importarCursosFichero(file);
 		if (curso != null) {
