@@ -1,6 +1,7 @@
 package modelo;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class Usuario {
 	private List<Curso> cursos;
 
 	private int tickets; // Número de cursos que se pueden hacer al día
-	private int tiempoUso; // Tiempo de uso de la aplicación (en horas)
+	private double tiempoUso; // Tiempo de uso de la aplicación (en horas)
 	private int mejorRacha;
 	private int rachaActual;
 
@@ -41,8 +42,9 @@ public class Usuario {
 	private LocalDateTime inicioSes; // Fecha inicio sesión actual
 
 	// Constructor
-	public Usuario() {}
-	
+	public Usuario() {
+	}
+
 	public Usuario(String nombreUs, String contrasena, String imagen, int telefono) {
 		this.nombreUs = nombreUs;
 		this.contrasena = contrasena;
@@ -87,10 +89,10 @@ public class Usuario {
 
 	// Propiedad calculada para mostrar actualizacion de horas cada
 	// vez que se hace un curso
-	public int getTiempoUso() {
-		int aux = tiempoUso;
+	public double getTiempoUso() {
+		double aux = tiempoUso;
 		Duration duracion = Duration.between(inicioSes, LocalDateTime.now());
-		aux += duracion.toHoursPart();
+		aux += duracion.toMinutes() / 60.0;
 		return aux;
 	}
 
@@ -135,7 +137,7 @@ public class Usuario {
 		this.tickets = tickets;
 	}
 
-	public void setTiempoUso(int tiempoUso) {
+	public void setTiempoUso(double tiempoUso) {
 		this.tiempoUso = tiempoUso;
 	}
 
@@ -160,9 +162,14 @@ public class Usuario {
 		return this.contrasena.equals(contrasena);
 	}
 
+	public void actualizarSesion() {
+		this.ultimaSes = this.inicioSes;
+		this.inicioSes = null;
+	}
+
 	public int calcularTickets() {
-		this.inicioSes=LocalDateTime.now();
-		if(ultimaSes==null)
+		this.inicioSes = LocalDateTime.now();
+		if (ultimaSes == null)
 			return MAX_TICKETS;
 		Duration duracion = Duration.between(ultimaSes, inicioSes);
 		int posibles = (int) (duracion.toHours() / INTERVALO);
@@ -173,27 +180,32 @@ public class Usuario {
 	}
 
 	public int calcularRacha() {
-		if(ultimaSes==null)
-			return 0;
-		Duration duracion = Duration.between(ultimaSes, inicioSes);
-		int horas = duracion.toHoursPart();
-		if (horas >= 24 && horas < 48) {
+		if (ultimaSes == null)
+			return INICIO;
+
+		LocalDate diaUltima = ultimaSes.toLocalDate();
+		LocalDate diaActual = inicioSes.toLocalDate();
+
+		if (diaUltima.plusDays(1).equals(diaActual)) {
 			rachaActual++;
 		} else {
 			rachaActual = 0;
 		}
+
 		if (rachaActual > mejorRacha) {
 			mejorRacha = rachaActual;
 		}
+
 		return rachaActual;
 	}
 
-	public int actualizarTiempoUso() {
+	public double actualizarTiempoUso() {
 		Duration duracion = Duration.between(inicioSes, LocalDateTime.now());
-		tiempoUso += duracion.toHoursPart();
+		double horasDecimal = duracion.toMinutes() / 60.0;
+		tiempoUso += horasDecimal;
 		return tiempoUso;
 	}
-	
+
 	public void anadirCurso(Curso curso) {
 		cursos.add(curso);
 	}

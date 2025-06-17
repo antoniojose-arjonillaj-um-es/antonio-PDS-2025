@@ -1,0 +1,38 @@
+nombre: Francés - Básico
+estado: sin_empezar
+correcciones: []
+contestadas: 0
+preguntas:
+  - tipo: Test
+    pregunta: "¿Cuál es el plural de 'cheval'?"
+    opciones:
+      - chevals
+      - chevaux
+      - chevales
+    respuestas: [1]
+
+  - tipo: Test
+    pregunta: "¿Cuál es el pasado de 'aller' (je)?"
+    opciones:
+      - suis allé
+      - allais
+      - allant
+    respuestas: [0]
+
+  - tipo: Traduccion
+    pregunta: "Bonjour"
+    respuesta: "Buenos días"
+
+  - tipo: Traduccion
+    pregunta: "Merci"
+    respuesta: "Gracias"
+
+  - tipo: Relleno
+    pregunta: "Tu "
+    segundaPreg: " content aujourd'hui."
+    respuesta: "es"
+
+  - tipo: Relleno
+    pregunta: "Nous "
+    segundaPreg: " au marché samedi dernier."
+    respuesta: "sommes allés"

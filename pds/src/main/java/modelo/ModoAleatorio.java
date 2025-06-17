@@ -17,6 +17,6 @@ public class ModoAleatorio implements ModoCurso {
 
 	@Override
 	public String toString() {
-		return "Modadlidad aleatoria";
+		return "Modalidad aleatoria";
 	}
 }

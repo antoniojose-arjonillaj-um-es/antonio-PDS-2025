@@ -95,7 +95,7 @@ public class VentanaPrincipal {
 		cargarImagen(imagenUs);
 
 		JLabel nombreUs = new JLabel(usuario.getNombreUs());
-		tiempoUs = new JLabel("Tiempo uso total: " + Integer.toString(usuario.getTiempoUso()) + " horas");
+		tiempoUs = new JLabel("Tiempo uso total: " + String.valueOf(usuario.getTiempoUso()) + " horas");
 
 		JLabel imagenTckt = new JLabel("");
 		ImageIcon originalIcon = new ImageIcon(getClass().getResource("/recursos/entradas.png"));
@@ -258,7 +258,7 @@ public class VentanaPrincipal {
 		if (resultado == JOptionPane.YES_OPTION) {
 			Curso cursoSelec = (Curso) comboCursos.getSelectedItem();
 			ModoCurso modoSelec = (ModoCurso) comboModo.getSelectedItem();
-			if (cursoSelec != null) {
+			if (cursoSelec != null && modoSelec != null) {
 				switch (cursoSelec.getEstado()) {
 				case EN_PROCESO:
 					JOptionPane.showMessageDialog(null, "Curso ya en ejecucion", "Error", JOptionPane.WARNING_MESSAGE);
@@ -294,7 +294,7 @@ public class VentanaPrincipal {
 					break;
 				}
 			} else {
-				JOptionPane.showMessageDialog(null, "ERROR: No hay curso seleccionado\nPor favor, importa un curso",
+				JOptionPane.showMessageDialog(null, "ERROR: No hay curso o modo seleccionado\nPor favor,selecciona uno",
 						"Error", JOptionPane.WARNING_MESSAGE);
 			}
 		}
@@ -345,7 +345,7 @@ public class VentanaPrincipal {
 	}
 
 	public void actualizarVentana() {
-		tiempoUs.setText("Tiempo uso total: " + Integer.toString(usuario.getTiempoUso()) + " horas");
+		tiempoUs.setText("Tiempo uso total: " + String.valueOf(usuario.getTiempoUso()) + " horas");
 		numeroTckt.setText(Integer.toString(usuario.getTickets()));
 
 		frame.revalidate();
