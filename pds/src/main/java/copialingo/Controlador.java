@@ -100,7 +100,7 @@ public class Controlador {
 	/*
 	 * Métodos para la gestión del curso
 	 */
-	
+
 	public boolean importarCurso(Usuario usuario, File file) throws Exception {
 		Curso curso = this.importadorYAML.importarCursosFichero(file);
 		if (curso != null) {
@@ -138,6 +138,10 @@ public class Controlador {
 
 	public List<ModoCurso> obtenerModos() {
 		return List.of(new ModoDefecto(), new ModoAleatorio(), new ModoContrarreloj(), new ModoContrarrelojAleatorio());
+	}
+
+	public void prepararPreguntas(ModoCurso modalidad, List<Pregunta> preguntas) {
+		modalidad.prepararPreguntas(preguntas);
 	}
 
 	/*
