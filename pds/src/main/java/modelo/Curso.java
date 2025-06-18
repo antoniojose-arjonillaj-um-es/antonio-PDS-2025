@@ -85,7 +85,7 @@ public class Curso {
 	public int getIncorrectas() {
 		int incorrectas = 0;
 		for (Boolean resultado : correcciones) {
-			if (!resultado || resultado == null) {
+			if (resultado == null || !resultado) {
 				incorrectas++;
 			}
 		}
@@ -134,15 +134,14 @@ public class Curso {
 	// Retorna preguntas sin responder
 	public List<Pregunta> getPreguntasVacias() {
 		List<Pregunta> copia = new ArrayList<>();
-		if  (correcciones != null && !correcciones.isEmpty()) {
+		if (correcciones != null && !correcciones.isEmpty()) {
 			for (int i = 0; i < preguntas.size(); i++) {
 				if (correcciones.get(i) == null)
 					copia.add(preguntas.get(i));
 			}
-		}
-		else {
+		} else {
 			this.correcciones = new ArrayList<>(Collections.nCopies(preguntas.size(), null));
-			copia=new ArrayList<>(preguntas);
+			copia = new ArrayList<>(preguntas);
 		}
 		return copia;
 	}
