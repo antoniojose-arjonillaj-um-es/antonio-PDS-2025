@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -169,13 +170,13 @@ public class Usuario {
 
 	public int calcularTickets() {
 		this.inicioSes = LocalDateTime.now();
-		if (ultimaSes == null)
+		if (ultimaSes == null) {
+			tickets = MAX_TICKETS;
 			return MAX_TICKETS;
+		}
 		Duration duracion = Duration.between(ultimaSes, inicioSes);
 		int posibles = (int) (duracion.toHours() / INTERVALO);
-		if (posibles >= MAX_TICKETS)
-			tickets = MAX_TICKETS;
-		tickets = posibles;
+		tickets = Math.min(MAX_TICKETS, tickets + posibles);
 		return tickets;
 	}
 
@@ -207,6 +208,18 @@ public class Usuario {
 	}
 
 	public void anadirCurso(Curso curso) {
+		String nombreBase = curso.getNombre();
+		// Filtrar los cursos que tienen el mismo nombre base o el mismo con sufijo "-
+		// Copia N"
+		long count = cursos.stream().filter(c -> {
+			String n = c.getNombre();
+			return n.equals(nombreBase) || n.matches(Pattern.quote(nombreBase) + " - Copia \\d+");
+		}).count();
+
+		if (count > 0) {
+			curso.setNombre(nombreBase + " - Copia " + count);
+		}
+
 		cursos.add(curso);
 	}
 

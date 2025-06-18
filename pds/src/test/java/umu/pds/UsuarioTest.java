@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -93,18 +94,43 @@ class UsuarioTest {
 
 	@Test
 	void testActualizarTiempoUso() {
-	    usuario.setInicioSes(LocalDateTime.now().minusMinutes(120));
-	    usuario.setTiempoUso(0.0);
-	    double tiempo = usuario.actualizarTiempoUso();
-	    assertEquals(2.0, tiempo, 0.01); // margen de error pequeño por división
+		usuario.setInicioSes(LocalDateTime.now().minusMinutes(120));
+		usuario.setTiempoUso(0.0);
+		double tiempo = usuario.actualizarTiempoUso();
+		assertEquals(2.0, tiempo, 0.01); // margen de error pequeño por división
 	}
-
 
 	@Test
 	void testAnadirCurso() {
 		Curso curso = new Curso();
 		usuario.anadirCurso(curso);
 		assertTrue(usuario.getCursos().contains(curso));
+	}
+
+	@Test
+	public void testAnadirCursoConNombreDuplicado() {
+		Usuario usuario = new Usuario("usuario1", "pass", "img.png", 123456);
+
+		// Añadimos primer curso con nombre "Curso A"
+		Curso curso1 = new Curso("Curso A", new ArrayList<>());
+		usuario.anadirCurso(curso1);
+
+		// Añadimos segundo curso con el mismo nombre "Curso A"
+		Curso curso2 = new Curso("Curso A", new ArrayList<>());
+		usuario.anadirCurso(curso2);
+
+		// Añadimos tercer curso con el mismo nombre "Curso A"
+		Curso curso3 = new Curso("Curso A", new ArrayList<>());
+		usuario.anadirCurso(curso3);
+
+		// El primer curso mantiene su nombre original
+		assertEquals("Curso A", usuario.getCursos().get(0).getNombre());
+
+		// El segundo curso debe tener sufijo "- Copia 1"
+		assertEquals("Curso A - Copia 1", usuario.getCursos().get(1).getNombre());
+
+		// El tercer curso debe tener sufijo "- Copia 2"
+		assertEquals("Curso A - Copia 2", usuario.getCursos().get(2).getNombre());
 	}
 
 	@Test

@@ -95,7 +95,7 @@ public class VentanaPrincipal {
 		cargarImagen(imagenUs);
 
 		JLabel nombreUs = new JLabel(usuario.getNombreUs());
-		tiempoUs = new JLabel("Tiempo uso total: " + String.valueOf(usuario.getTiempoUso()) + " horas");
+		tiempoUs = new JLabel("Tiempo uso total: " + String.format("%.2f", usuario.getTiempoUso()) + " horas");
 
 		JLabel imagenTckt = new JLabel("");
 		ImageIcon originalIcon = new ImageIcon(getClass().getResource("/recursos/entradas.png"));
@@ -107,6 +107,7 @@ public class VentanaPrincipal {
 		JLabel rachaMax = new JLabel("Mejor racha: " + Integer.toString(usuario.getMejorRacha()));
 
 		JButton btnImportar = new JButton("Importar curso");
+		JButton btnExportar = new JButton("Exportar curso");
 		JButton btnAbrir = new JButton("Abrir curso");
 		JButton btnCompartir = new JButton("Compartir curso");
 
@@ -146,11 +147,19 @@ public class VentanaPrincipal {
 		panelSup.add(panelInfo);
 		contentPane.add(panelSup, BorderLayout.NORTH);
 
+		// Creamos panel con paneles que usarán manejadorYAML
+		JPanel panelYAML = new JPanel();
+		panelYAML.setLayout(new BoxLayout(panelYAML, BoxLayout.Y_AXIS));
+		panelYAML.add(btnImportar);
+		panelYAML.add(Box.createVerticalStrut(10));
+		panelYAML.add(btnExportar);
+		panelYAML.setMaximumSize(panelYAML.getPreferredSize());
+
 		// Creamos panel que contendra los botones de la aplicacion
 		JPanel panelBtn = new JPanel();
 		panelBtn.setLayout(new BoxLayout(panelBtn, BoxLayout.X_AXIS));
 		panelBtn.add(Box.createHorizontalGlue());
-		panelBtn.add(btnImportar);
+		panelBtn.add(panelYAML);
 		panelBtn.add(Box.createHorizontalStrut(10));
 		panelBtn.add(btnCompartir);
 		panelBtn.add(Box.createHorizontalStrut(10));
@@ -187,6 +196,14 @@ public class VentanaPrincipal {
 				} catch (Exception error) {
 					error.printStackTrace();
 				}
+			}
+		});
+
+		// Evento para exportar curso
+		btnExportar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				exportarCurso();
 			}
 		});
 
@@ -344,8 +361,42 @@ public class VentanaPrincipal {
 		}
 	}
 
+	private void exportarCurso() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(new JLabel("Exportación"));
+		panel.add(Box.createVerticalStrut(3));
+
+		panel.add(new JLabel("Elige curso a exportar:"));
+		JComboBox<Curso> comboCursos = new JComboBox<>(usuario.getCursos().toArray(new Curso[0]));
+		panel.add(comboCursos);
+
+		int resultado = JOptionPane.showConfirmDialog(null, panel, "¯\\(°_o)/¯ ", JOptionPane.YES_NO_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
+
+		if (resultado == JOptionPane.YES_OPTION) {
+			Curso cursoSelec = (Curso) comboCursos.getSelectedItem();
+			if (cursoSelec != null) {
+				switch (controlador.exportarCurso(cursoSelec)) {
+				case Controlador.ACIERTO:
+					JOptionPane.showMessageDialog(null, "Curso compartido correctamente.", "\\(＾▽＾)/ ",
+							JOptionPane.PLAIN_MESSAGE);
+					break;
+				case Controlador.ERROR:
+					JOptionPane.showMessageDialog(null, "ERROR: No se pudo exportar curso.", "((((( ;°Д°) ",
+							JOptionPane.ERROR_MESSAGE);
+					break;
+				default:
+					JOptionPane.showMessageDialog(null, "ERROR: Error desconocido.", "(?_?) ",
+							JOptionPane.ERROR_MESSAGE);
+					break;
+				}
+			}
+		}
+	}
+
 	public void actualizarVentana() {
-		tiempoUs.setText("Tiempo uso total: " + String.valueOf(usuario.getTiempoUso()) + " horas");
+		tiempoUs.setText("Tiempo uso total: " + String.format("%.2f", usuario.getTiempoUso()) + " horas");
 		numeroTckt.setText(Integer.toString(usuario.getTickets()));
 
 		frame.revalidate();
