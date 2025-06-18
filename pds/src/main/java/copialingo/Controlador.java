@@ -11,7 +11,7 @@ import modelo.ModoCurso;
 import modelo.ModoDefecto;
 import modelo.Pregunta;
 import modelo.Usuario;
-import persistencia.ImportadorCursosYAML;
+import persistencia.ManejadorCursosYAML;
 import persistencia.RepoUsuarios;
 
 public class Controlador {
@@ -21,6 +21,7 @@ public class Controlador {
 	public static final int ERROR_TLF = 1;
 	public static final int ERROR_NOREPE = 2;
 	public static final int ERROR_NAME = 3;
+	public static final int ERROR = 999;
 
 	public static final int NOMB = 0;
 	public static final int TELF = 1;
@@ -31,12 +32,12 @@ public class Controlador {
 	// Atributos
 	private static Controlador instancia = null;
 	private RepoUsuarios repositorio;
-	private ImportadorCursosYAML importadorYAML;
+	private ManejadorCursosYAML manejadorCursosYAML;
 
 	// Constructor
 	private Controlador() {
 		this.repositorio = RepoUsuarios.getInstancia();
-		this.importadorYAML = ImportadorCursosYAML.getInstancia();
+		this.manejadorCursosYAML = ManejadorCursosYAML.getInstancia();
 	}
 
 	// Métodos de clase
@@ -102,7 +103,7 @@ public class Controlador {
 	 */
 
 	public boolean importarCurso(Usuario usuario, File file) throws Exception {
-		Curso curso = this.importadorYAML.importarCursosFichero(file);
+		Curso curso = this.manejadorCursosYAML.importarCursosFichero(file);
 		if (curso != null) {
 			usuario.anadirCurso(curso);
 			return true;
@@ -160,5 +161,15 @@ public class Controlador {
 		user.anadirCurso(copia);
 		repositorio.guardarUsuario(user);
 		return ACIERTO;
+	}
+
+	public int exportarCurso(Curso curso) {
+		try {
+			manejadorCursosYAML.exportarCurso(curso,  System.getProperty("user.dir"));
+			return ACIERTO;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ERROR;
+		}
 	}
 }

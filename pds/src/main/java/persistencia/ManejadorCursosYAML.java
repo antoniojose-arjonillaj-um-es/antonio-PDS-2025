@@ -7,19 +7,19 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import modelo.Curso;
 
-public class ImportadorCursosYAML {
+public class ManejadorCursosYAML {
 
-	private static ImportadorCursosYAML instancia;
+	private static ManejadorCursosYAML instancia;
 
 	// Constructor
-	private ImportadorCursosYAML() {
+	private ManejadorCursosYAML() {
 
 	}
 
 	// Métodos de clase
-	public static ImportadorCursosYAML getInstancia() {
+	public static ManejadorCursosYAML getInstancia() {
 		if (instancia == null) {
-			instancia = new ImportadorCursosYAML();
+			instancia = new ManejadorCursosYAML();
 		}
 		return instancia;
 	}
@@ -32,5 +32,16 @@ public class ImportadorCursosYAML {
 	public Curso importarCursosFichero(File archivo) throws Exception {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		return mapper.readValue(archivo, Curso.class);
+	}
+
+	public void exportarCurso(Curso curso, String rutaDirectorio) throws Exception {
+		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+		mapper.findAndRegisterModules();
+
+		// Aseguramos que el nombre del archivo es válido
+		String nombreArchivo = curso.getNombre().replaceAll("[^\\p{L}\\p{N} _\\-\\.]", "-") + ".yaml";
+		File archivo = new File(rutaDirectorio, nombreArchivo);
+
+		mapper.writeValue(archivo, curso);
 	}
 }
