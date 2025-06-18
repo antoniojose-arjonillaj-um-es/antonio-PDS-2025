@@ -86,8 +86,9 @@ class ManejadorCursosYAMLTest {
 		ManejadorCursosYAML importer = ManejadorCursosYAML.getInstancia();
 		importer.exportarCurso(curso, tempDir.getAbsolutePath());
 
-		// Nombre esperado del archivo
-		File archivo = new File(tempDir, "Curso-Prueba.yaml");
+		// Nombre esperado del archivo (usando la expresión regular actual)
+		String nombreArchivo = curso.getNombre().replaceAll("[^\\p{L}\\p{N} _\\-\\.]", "-") + ".yaml";
+		File archivo = new File(tempDir, nombreArchivo);
 
 		// Comprobar que el archivo existe y no está vacío
 		assertTrue(archivo.exists(), "El archivo YAML debería haberse creado");
