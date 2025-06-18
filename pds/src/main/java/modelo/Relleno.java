@@ -40,7 +40,6 @@ public class Relleno extends Pregunta {
 	// Métodos de clase
 	@Override
 	public boolean corregir(String dato) {
-		return respuesta.equals(dato);
+	    return dato != null && respuesta.equalsIgnoreCase(dato);
 	}
-
 }

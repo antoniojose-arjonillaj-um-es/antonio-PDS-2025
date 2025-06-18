@@ -48,7 +48,7 @@ public class Test extends Pregunta {
 	// Métodos de clase
 	@Override
 	public boolean corregir(String dato) {
-		if (dato.isEmpty() || dato == null)
+		if (dato == null || dato.isEmpty())
 			return false;
 		List<Integer> numeros = Arrays.stream(dato.split(",")).map(Integer::parseInt).collect(Collectors.toList());
 		if (numeros.size() != respuestas.size())
@@ -59,5 +59,4 @@ public class Test extends Pregunta {
 		}
 		return true;
 	}
-
 }
