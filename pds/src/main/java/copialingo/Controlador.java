@@ -165,7 +165,7 @@ public class Controlador {
 
 	public int exportarCurso(Curso curso) {
 		try {
-			manejadorCursosYAML.exportarCurso(curso,  System.getProperty("user.dir"));
+			manejadorCursosYAML.exportarCurso(curso, System.getProperty("user.dir"));
 			return ACIERTO;
 		} catch (Exception e) {
 			e.printStackTrace();
