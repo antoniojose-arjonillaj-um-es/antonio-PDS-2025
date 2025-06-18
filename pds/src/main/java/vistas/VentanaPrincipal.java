@@ -95,7 +95,7 @@ public class VentanaPrincipal {
 		cargarImagen(imagenUs);
 
 		JLabel nombreUs = new JLabel(usuario.getNombreUs());
-		tiempoUs = new JLabel("Tiempo uso total: " + String.valueOf(usuario.getTiempoUso()) + " horas");
+		tiempoUs = new JLabel("Tiempo uso total: " + String.format("%.2f", usuario.getTiempoUso()) + " horas");
 
 		JLabel imagenTckt = new JLabel("");
 		ImageIcon originalIcon = new ImageIcon(getClass().getResource("/recursos/entradas.png"));
@@ -396,7 +396,7 @@ public class VentanaPrincipal {
 	}
 
 	public void actualizarVentana() {
-		tiempoUs.setText("Tiempo uso total: " + String.valueOf(usuario.getTiempoUso()) + " horas");
+		tiempoUs.setText("Tiempo uso total: " + String.format("%.2f", usuario.getTiempoUso()) + " horas");
 		numeroTckt.setText(Integer.toString(usuario.getTickets()));
 
 		frame.revalidate();
