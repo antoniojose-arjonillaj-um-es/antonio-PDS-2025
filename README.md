@@ -46,3 +46,12 @@ Estos tickets se calculan al iniciar sesión a partir desde la fecha de último 
 - El usuario puede compartir un curso que tenga importado en la aplicación, indicando el curso a compartir y el destinatario.
 
 - El usuario puede exportar un curso que tenga almacenado en la aplicación, obteniendo un archivo YAML que lo almacena.
+
+## NOTAS
+
+- En la carpeta raíz del proyecto tenemos archivos .yaml con una serie de cursos de prueba que contienen al menos una pregunta de cada tipo,
+  como referencia para escribir un curso nuevo, además de realizar las pruebas/comprobaciones pertinentes de la aplicación.
+  
+- Para la persistencia se usan las tecnologías propuestas por la asignatura (JPA API, Hibernate y SQLite).
+
+- Para la lectura de archivos YAML se usa la librería Jackson (todas las librerías usadas se muestran en el POM).
