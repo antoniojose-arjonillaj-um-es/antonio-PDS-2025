@@ -7,6 +7,7 @@
 ### Profesor
 - Marcial Pamies Berenguer
 
+---
 ## Explicación de las prácticas
 El objetivo de las prácticas consiste en construir una aplicación de aprendizaje para aprender y repasar cualquier tipo de dominio.
 
@@ -16,6 +17,7 @@ diferentes ejercicios uno a uno.
 Dentro de un curso pueden existir diferentes bloques de contenidos con diferentes tipos de ejercicios.
 El diseño del sistema debe permitir que se pueda extender con nuevos tipos de preguntas para adaptarlos a otros dominios.
 
+---
 ## Requisitos mínimos de la aplicación pedidos por la asignatura
 
 - Deben existir al menos 3 tipos de preguntas (o pantallas de aprendizaje) diferentes, pero
@@ -35,7 +37,7 @@ definido como un fichero JSON o YAML por lo que no es necesario una interfaz de 
 para desarrollar los cursos.
 
 - Se deberán idear características adicionales que tenga el sistema (mínimo 1).
-
+---
 ## Características adicionales del sistema desarrolladas
 
 - El usuario tiene una imagen, la cual puede cambiar al hacer doble click sobre esta.
@@ -46,7 +48,7 @@ Estos tickets se calculan al iniciar sesión a partir desde la fecha de último 
 - El usuario puede compartir un curso que tenga importado en la aplicación, indicando el curso a compartir y el destinatario.
 
 - El usuario puede exportar un curso que tenga almacenado en la aplicación, obteniendo un archivo YAML que lo almacena.
-
+---
 ## Características básicas del sistema implementadas
 - El formato escogido para los archivos para cargar cursos es YAML.
 
@@ -62,7 +64,7 @@ Estos tickets se calculan al iniciar sesión a partir desde la fecha de último 
   - Preguntas tipo test: dada una pregunta, se muestran varias opciones de respuesta. Pueden escogerse varias respuestas a la vez en caso de respuesta múltiple.
   - Preguntas de traducción: dada una pregunta, se muestra un campo de texto para introducir la respuesta.
   - Pregunta de relleno: hay un campo de texto en medio de la pregunta, para introducir la palabra/frase más adecuada para su completitud. 
-
+---
 ## NOTAS
 
 - En la carpeta raíz del proyecto tenemos archivos .yaml con una serie de cursos de prueba que contienen al menos una pregunta de cada tipo,
