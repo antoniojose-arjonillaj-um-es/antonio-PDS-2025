@@ -84,6 +84,8 @@ Estos tickets se calculan al iniciar sesión a partir desde la fecha de último 
 ### Caso 1:
 Actor: Usuario
 
+Objetivo: El usuario desea registrarse en el sistema.
+
 **Flujo básico:**
 1. Usuario abre la ventana de registro.
 2. Usuario introduce sus datos.
@@ -97,7 +99,9 @@ Alternativas:
 Precondición: Usuario no está registrado en el sistema.
 
 ### Caso 2:
-Actor: Usuario 
+Actor: Usuario
+
+Objetivo: El usuario desea iniciar sesión en la aplicación.
 
 **Flujo básico:**
 1. Usuario introduce sus datos.
@@ -113,6 +117,8 @@ Precondición: Usuario está registrado en el sistema.
 ### Caso 3:
 Actor: Usuario 
 
+Objetivo: El usuario desea importar un curso desde un archivo YAML.
+
 **Flujo básico:**
 1. Usuario selecciona opción importar curso.
 2. Sistema muestra ventana de selección.
@@ -127,6 +133,8 @@ Alternativas:
 
 ### Caso 4:
 Actor: Usuario
+
+Objetivo: El usuario desea realizar un curso.
 
 **Flujo básico:**
 1. Usuario selecciona botón Comenzar curso.
@@ -151,6 +159,8 @@ Precondición: Hay cursos no comenzados
 ### Caso 5:
 Actor: Usuario
 
+Objetivo: El usuario desea continuar un curso pausado.
+
 **Flujo básico:**
 1. Usuario selecciona curso y estrategia a realizar, siendo el curso uno no finalizado.
 2. Sistema muestra ventana de diálogo indicando si quiere recomenzar o continuar curso.
@@ -174,12 +184,16 @@ Precondición: Hay cursos que no están completamente resueltos.
 ### Caso 6:
 Actor: Usuario
 
+Objetivo: El usuario desea ver sus estadísticas generales.
+
 **Flujo básico:**
 1. Usuario ve sus estadísticas en la ventana principal.
 
 
 ### Caso 7:
 Actor: Usuario
+
+Objetivo: El usuario desea cambiar la imagen de su cuenta.
 
 **Flujo básico:**
 1. Usuario hace doble click sobre su imagen.
@@ -196,6 +210,8 @@ Alternativas:
 ### Caso 8:
 Actor: Usuario
 
+Objetivo: El usuario desea compartir un curso de su lista con otro usuario desde la aplicación.
+
 **Flujo básico:**
 1. Usuario introduce usuario (nombre o teléfono) al que compartir curso.
 2. Usuario selecciona curso que compartir.
@@ -208,6 +224,7 @@ Alternativa:
 
 ### Caso 9:
 Actor: Usuario
+Objetivo: El usuario desea obtener un archivo YAML con un curso de su lista.
 
 **Flujo básico:**
 1. Usuario selecciona curso.
