@@ -240,6 +240,25 @@ El modelo de la aplicación se muestra en la siguiente imagen:
 ![Modelo del dominio](Modelo/Modelo%20dominio.png)
 
 ---
+## Indicaciones para ejecución de app y usuarios de ejemplo para pruebas
+
+La aplicación se puede ejecutar normalmente desde Eclipse (clase Lanzador contiene main) o ejecutando Copialingo.jar usando el comando java -jar desde consola .
+
+Actualmente hay dos usuarios registrados en el sistema:
+
+Usuario 1 
+  - Nombre: "Antonio" 
+  - Telefono: "1"
+  - Contraseña: "1"
+
+Usuario 2 
+  - Nombre: "José"
+  - Telefono: "2"
+  - Contraseña: "2"
+
+Pueden usarse estos o crear nuevos para probar libremente la aplicación.
+
+---
 ## NOTAS
 
 - En la carpeta raíz del proyecto tenemos archivos .yaml con una serie de cursos de prueba que contienen al menos una pregunta de cada tipo,
@@ -248,3 +267,7 @@ El modelo de la aplicación se muestra en la siguiente imagen:
 - Para la persistencia se usan las tecnologías propuestas por la asignatura (JPA API, Hibernate y SQLite).
 
 - Para la lectura de archivos YAML se usa la librería Jackson (todas las librerías usadas se muestran en el POM).
+
+- Se utilizan las tecnologías Swing presentadas en la asignatura de TDS para un desarrollo más ligero de la interfaz gráfica, al ser una tecnología sencilla y conocida.
+
+- Debido a que en mi grupo original se habló de realizar la práctica pero al final no se hizo nada, he decidido desarrollar y presentar las prácticas de esta asignatura en solitario para la convocatoria de Julio 2025, dado que de otra forma no me daba tiempo.
