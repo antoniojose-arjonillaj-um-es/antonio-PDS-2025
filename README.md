@@ -59,9 +59,9 @@ para desarrollar los cursos.
 - El usuario tiene una imagen, la cual puede cambiar al hacer doble click sobre esta.
 
 - El usuario dispone de una serie de tickets (10 como máximo) los cuales puede gastar para realizar cursos.
-Estos tickets se calculan al iniciar sesión a partir desde la fecha de último inicio de sesión.
+Estos tickets se calculan al iniciar sesión a partir desde la fecha de último inicio de sesión (10 máximo al día, véase, un ticket cada 2,4 horas).
 
-- El usuario puede compartir un curso que tenga importado en la aplicación, indicando el curso a compartir y el destinatario.
+- El usuario puede compartir un curso que tenga importado en la aplicación desde la propia aplicación, indicando el curso a compartir y el destinatario.
 
 - El usuario puede exportar un curso que tenga almacenado en la aplicación, obteniendo un archivo YAML que lo almacena.
 ---
@@ -218,9 +218,9 @@ Precondición: Hay un curso en la lista de cursos del usuario.
 ---
 ## Modelo de dominio
 
+El modelo de la aplicación se muestra en la siguiente imagen:
 
-
-
+![Modelo](modelo/Modelo dominio.png)
 
 ---
 ## NOTAS
