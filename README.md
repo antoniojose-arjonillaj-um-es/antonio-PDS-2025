@@ -94,6 +94,7 @@ Alternativas:
 
 - 3a: Sistema rechaza los datos porque nombre y/o teléfono ya están siendo utilizados.
 
+Precondición: Usuario no está registrado en el sistema.
 
 ### Caso 2:
 Actor: Usuario 
@@ -107,14 +108,17 @@ Alternativas:
 
 - 3a: Sistema lanza mensaje indicando que los datos son incorrectos.
 
+Precondición: Usuario está registrado en el sistema.
 
 ### Caso 3:
 Actor: Usuario 
 
 **Flujo básico:**
-1. Usuario selecciona archivo con el curso.
-2. Sistema lee archivo y lo añade lista del usuario.
-3. Sistema notifica resultado a usuario.
+1. Usuario selecciona opción importar curso.
+2. Sistema muestra ventana de selección.
+3. Usuario selecciona archivo con el curso.
+4. Sistema lee archivo y lo añade lista del usuario.
+5. Sistema notifica resultado a usuario.
 
 Alternativas:
 
@@ -125,16 +129,24 @@ Alternativas:
 Actor: Usuario
 
 **Flujo básico:**
-1. Usuario selecciona curso y estrategia a realizar.
-2. Sistema abre ventana mostrando las preguntas según estrategia escogida.
-3. (En bucle) Usuario responde a las preguntas.
-4. (En bucle) Sistema comprueba respuesta y guarda resultado.
-5. Usuario termina el curso.
-6. Sistema muestra resultados del curso.
+1. Usuario selecciona botón Comenzar curso.
+2. Sistema muestra ventana de diálogo.
+3. Usuario selecciona curso y estrategia a realizar.
+4. Sistema abre ventana mostrando las preguntas según estrategia escogida.
+5. (En bucle) Usuario responde a las preguntas.
+6. (En bucle) Sistema comprueba respuesta y guarda resultado.
+7. Usuario termina el curso.
+8. Sistema muestra resultados del curso.
 
 Alternativas:
-- 5a: Usuario abandona curso sin responder todas las preguntas.
-- 6a: Sistema vuelve a la página principal sin mostrar resultados.
+- 4a: Sistema no recibe datos y aborta operación.
+- 5b: Usuario abandona curso sin responder todas las preguntas.
+- 6b: Sistema vuelve a la página principal sin mostrar resultados.
+- 4c: Sistema detecta curso finalizado y muestra ventana de diálogo con estadísticas de últimos resultados preguntando si desea reiniciar.
+- 5d: Usuario selecciona no reiniciar.
+- 6d: Sistema vuelve a página principal.
+
+Precondición: Hay cursos no comenzados 
 
 ### Caso 5:
 Actor: Usuario
@@ -155,6 +167,8 @@ Alternativas:
 - 4a: Sistema reinicia curso y muestra todas las preguntas del curso para que el usuario las conteste.
 - 6b: Usuario sale del curso sin terminarlo.
 - 7b: Sistema vuelve a la página principal sin mostrar resultados.
+
+Precondición: Hay cursos que no están completamente resueltos.
 
 
 ### Caso 6:
@@ -190,6 +204,7 @@ Actor: Usuario
 
 Alternativa:
 - 3a: Sistema no encuentra usuario y aborta operación.
+- 3b: Sistema no recibe curso para compartir y aborta operación.
 
 ### Caso 9:
 Actor: Usuario
@@ -198,6 +213,7 @@ Actor: Usuario
 1. Usuario selecciona curso.
 2. Sistema crea archivo con el curso en formato YAML.
 
+Precondición: Hay un curso en la lista de cursos del usuario.
 
 ---
 ## Modelo de dominio
