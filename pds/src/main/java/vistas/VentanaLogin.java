@@ -74,7 +74,7 @@ public class VentanaLogin {
 		gbc_lblImagen.gridx = 0;
 		gbc_lblImagen.gridy = 0;
 		gbc_lblImagen.gridwidth = 3;
-		ImageIcon originalIcon = new ImageIcon(VentanaRegistro.class.getResource("/recursos/Copialingo.png"));
+		ImageIcon originalIcon = new ImageIcon(getClass().getResource("/recursos/Copialingo.png"));
 		Image scaledImage = originalIcon.getImage().getScaledInstance(LOGO, LOGO, Image.SCALE_SMOOTH);
 		lblImagen.setIcon(new ImageIcon(scaledImage));
 		panelPrincipal.add(lblImagen, gbc_lblImagen);
