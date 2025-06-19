@@ -81,8 +81,130 @@ Estos tickets se calculan al iniciar sesión a partir desde la fecha de último 
 
 ## Descripción casos de uso
 
+### Caso 1:
+Actor: Usuario
+
+**Flujo básico:**
+1. Usuario abre la ventana de registro.
+2. Usuario introduce sus datos.
+3. Sistema registra a usuario en el sistema con los datos proporcionados.
+4. Sistema muestra mensaje indicado resultado de la operación.
+
+Alternativas:
+
+- 3a: Sistema rechaza los datos porque nombre y/o teléfono ya están siendo utilizados.
+
+
+### Caso 2:
+Actor: Usuario 
+
+**Flujo básico:**
+1. Usuario introduce sus datos.
+2. Sistema comprueba los datos.
+3. Sistema lanza la página principal con el usuario introducido cargado.
+
+Alternativas:
+
+- 3a: Sistema lanza mensaje indicando que los datos son incorrectos.
+
+
+### Caso 3:
+Actor: Usuario 
+
+**Flujo básico:**
+1. Usuario selecciona archivo con el curso.
+2. Sistema lee archivo y lo añade lista del usuario.
+3. Sistema notifica resultado a usuario.
+
+Alternativas:
+
+- 2a: Hay un error en la lectura y sistema aborta la operación.
+
+
+### Caso 4:
+Actor: Usuario
+
+**Flujo básico:**
+1. Usuario selecciona curso y estrategia a realizar.
+2. Sistema abre ventana mostrando las preguntas según estrategia escogida.
+3. (En bucle) Usuario responde a las preguntas.
+4. (En bucle) Sistema comprueba respuesta y guarda resultado.
+5. Usuario termina el curso.
+6. Sistema muestra resultados del curso.
+
+Alternativas:
+- 5a: Usuario abandona curso sin responder todas las preguntas.
+- 6a: Sistema vuelve a la página principal sin mostrar resultados.
+
+### Caso 5:
+Actor: Usuario
+
+**Flujo básico:**
+1. Usuario selecciona curso y estrategia a realizar, siendo el curso uno no finalizado.
+2. Sistema muestra ventana de diálogo indicando si quiere recomenzar o continuar curso.
+3. Usuario escoge continuar curso.
+4. Sistema muestra preguntas restantes para que el usuario las conteste.
+5. (En bucle) Usuario contesta las preguntas.
+6. (En bucle) Sistema comprueba respuesta y guarda resultado.
+7. Usuario termina el curso.
+8. Sistema muestra resultado del curso.
+
+Alternativas:
+
+- 3a: Usuario escoge recomenzar curso.
+- 4a: Sistema reinicia curso y muestra todas las preguntas del curso para que el usuario las conteste.
+- 6b: Usuario sale del curso sin terminarlo.
+- 7b: Sistema vuelve a la página principal sin mostrar resultados.
+
+
+### Caso 6:
+Actor: Usuario
+
+**Flujo básico:**
+1. Usuario ve sus estadísticas en la ventana principal.
+
+
+### Caso 7:
+Actor: Usuario
+
+**Flujo básico:**
+1. Usuario hace doble click sobre su imagen.
+2. Sistema muestra ventana de diálogo.
+3. Usuario introduce URL de nueva imagen.
+4. Sistema carga nueva imagen.
+
+Alternativas:
+
+- 3a: Usuario no introduce ninguna URL.
+- 4a: Sistema carga imagen por defecto del sistema.
+
+
+### Caso 8:
+Actor: Usuario
+
+**Flujo básico:**
+1. Usuario introduce usuario (nombre o teléfono) al que compartir curso.
+2. Usuario selecciona curso que compartir.
+3. Sistema comprueba existencia de usuario y comparte curso.
+4. Sistema muestra resultado.
+
+Alternativa:
+- 3a: Sistema no encuentra usuario y aborta operación.
+
+### Caso 9:
+Actor: Usuario
+
+**Flujo básico:**
+1. Usuario selecciona curso.
+2. Sistema crea archivo con el curso en formato YAML.
+
+
 ---
 ## Modelo de dominio
+
+
+
+
 
 ---
 ## NOTAS
