@@ -65,7 +65,21 @@ Estos tickets se calculan al iniciar sesión a partir desde la fecha de último 
 
 - El usuario puede exportar un curso que tenga almacenado en la aplicación, obteniendo un archivo YAML que lo almacena.
 ---
-## Casos de uso
+# Casos de uso
+
+| ID      |  Caso de Uso          | Actor      | Descripción                                                   |
+|---------|-----------------------|------------|---------------------------------------------------------------|
+| Caso 1  | Registro usuario      | Usuario    | Usuario  crea una cuenta.                                     |
+| Caso 2  | Inicio sesión         | Usuario    | Usuario accede a su cuenta.                                   |
+| Caso 3  | Importar curso        | Usuario    | Usuario añade un curso a su cuenta.                           |
+| Caso 4  | Seleccionar curso     | Usuario    | Usuario realiza curso.                                        |
+| Caso 5  | Reanudar curso        | Usuario    | Usuario continua curso desde donde lo dejó.                   |
+| Caso 6  | Ver estadísticas      | Usuario    | Usuario ve su estadísticas generales.                         |
+| Caso 7  | Cambiar imagen        | Usuario    | Usuario cambia su imagen en la aplicación.                    |
+| Caso 8  | Compartir curso       | Usuario    | Usuario comparte curso con otro usuario desde la aplicación.  |
+| Caso 9  | Exportar curso        | Usuario    | Usuario exporta curso desde la aplicación.                    |
+
+## Descripción casos de uso
 
 ---
 ## Modelo de dominio
