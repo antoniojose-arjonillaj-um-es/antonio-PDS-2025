@@ -220,7 +220,7 @@ Precondición: Hay un curso en la lista de cursos del usuario.
 
 El modelo de la aplicación se muestra en la siguiente imagen:
 
-![Modelo](modelo/Modelo dominio.png)
+![Modelo del dominio](Modelo/Modelo%20dominio.png)
 
 ---
 ## NOTAS
