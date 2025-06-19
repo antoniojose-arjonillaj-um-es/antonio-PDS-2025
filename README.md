@@ -38,17 +38,6 @@ para desarrollar los cursos.
 
 - Se deberán idear características adicionales que tenga el sistema (mínimo 1).
 ---
-## Características adicionales del sistema desarrolladas
-
-- El usuario tiene una imagen, la cual puede cambiar al hacer doble click sobre esta.
-
-- El usuario dispone de una serie de tickets (10 como máximo) los cuales puede gastar para realizar cursos.
-Estos tickets se calculan al iniciar sesión a partir desde la fecha de último inicio de sesión.
-
-- El usuario puede compartir un curso que tenga importado en la aplicación, indicando el curso a compartir y el destinatario.
-
-- El usuario puede exportar un curso que tenga almacenado en la aplicación, obteniendo un archivo YAML que lo almacena.
----
 ## Características básicas del sistema implementadas
 - El formato escogido para los archivos para cargar cursos es YAML.
 
@@ -64,6 +53,23 @@ Estos tickets se calculan al iniciar sesión a partir desde la fecha de último 
   - Preguntas tipo test: dada una pregunta, se muestran varias opciones de respuesta. Pueden escogerse varias respuestas a la vez en caso de respuesta múltiple.
   - Preguntas de traducción: dada una pregunta, se muestra un campo de texto para introducir la respuesta.
   - Pregunta de relleno: hay un campo de texto en medio de la pregunta, para introducir la palabra/frase más adecuada para su completitud. 
+---
+## Características adicionales del sistema desarrolladas
+
+- El usuario tiene una imagen, la cual puede cambiar al hacer doble click sobre esta.
+
+- El usuario dispone de una serie de tickets (10 como máximo) los cuales puede gastar para realizar cursos.
+Estos tickets se calculan al iniciar sesión a partir desde la fecha de último inicio de sesión.
+
+- El usuario puede compartir un curso que tenga importado en la aplicación, indicando el curso a compartir y el destinatario.
+
+- El usuario puede exportar un curso que tenga almacenado en la aplicación, obteniendo un archivo YAML que lo almacena.
+---
+## Casos de uso
+
+---
+## Modelo de dominio
+
 ---
 ## NOTAS
 
