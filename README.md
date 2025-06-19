@@ -36,7 +36,7 @@ para desarrollar los cursos.
 
 - Se deberán idear características adicionales que tenga el sistema (mínimo 1).
 
-## Características adicionales del sistema
+## Características adicionales del sistema desarrolladas
 
 - El usuario tiene una imagen, la cual puede cambiar al hacer doble click sobre esta.
 
@@ -46,6 +46,22 @@ Estos tickets se calculan al iniciar sesión a partir desde la fecha de último 
 - El usuario puede compartir un curso que tenga importado en la aplicación, indicando el curso a compartir y el destinatario.
 
 - El usuario puede exportar un curso que tenga almacenado en la aplicación, obteniendo un archivo YAML que lo almacena.
+
+## Características básicas del sistema implementadas
+- El formato escogido para los archivos para cargar cursos es YAML.
+
+- Al registrarse, un usuario debe de introducir obligatoriamente su nombre y teléfono (ambos no pueden coincidir con los de otro usuario), contraseña y opcionalmente una imagen (se carga una por defecto si no tiene ninguna).
+
+- Se han desarrollado 4 tipo de estrategias para realizar los cursos:
+  - Defecto : se muestran las preguntas en el orden en el que aparecen en el curso.
+  - Aleatorio: se muestran las preguntas en un orden aleatorio.
+  - Contrarreloj: se muestran en el orden por defecto pero hay tiempo limitado para contestar cada pregunta. Este se muestra en pantalla. Si no se responde a tiempo, se pasa automáticamente la pregunta, recogiendo la respuesta introducida hasta el momento.
+  - Contrarreloj aleatorio: como contrarreloj pero desordenando las preguntas
+
+- Se han creado 3 tipos de preguntas:
+  - Preguntas tipo test: dada una pregunta, se muestran varias opciones de respuesta. Pueden escogerse varias respuestas a la vez en caso de respuesta múltiple.
+  - Preguntas de traducción: dada una pregunta, se muestra un campo de texto para introducir la respuesta.
+  - Pregunta de relleno: hay un campo de texto en medio de la pregunta, para introducir la palabra/frase más adecuada para su completitud. 
 
 ## NOTAS
 
